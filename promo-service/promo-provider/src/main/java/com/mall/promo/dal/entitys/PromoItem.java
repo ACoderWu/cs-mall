@@ -23,7 +23,7 @@ public class PromoItem {
     //商品id
     private Long itemId;
     //秒杀价格
-    private BigDecimal secKillPrice;
+    private BigDecimal seckillPrice;
     //秒杀库存
     private Integer stockNum;
 
