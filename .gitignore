@@ -1,0 +1,3 @@
+# Project exclude paths
+/promo-service/promo-api/target/
+/promo-service/promo-provider/target/
