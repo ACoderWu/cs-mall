@@ -89,6 +89,11 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>com.mall.shopping</groupId>
+            <artifactId>shopping-provider</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>com.mall.commons</groupId>
             <artifactId>commons-core</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -103,6 +108,12 @@
             <groupId>com.mall.commons</groupId>
             <artifactId>commons-tool</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mall.order</groupId>
+            <artifactId>order-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

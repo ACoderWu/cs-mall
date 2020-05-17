@@ -1,5 +1,6 @@
 package com.mall.promo.dal.entitys;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.Table;
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
  */
 @Table(name = "tb_promo_item")
 @Data
+@Builder
 public class PromoItem {
     private Integer id;
     /**

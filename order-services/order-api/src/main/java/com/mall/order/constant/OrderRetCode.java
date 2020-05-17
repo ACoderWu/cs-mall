@@ -1,23 +1,24 @@
 package com.mall.order.constant;
 
 /**
- *  ciggar
+ * ciggar
  * create-date: 2019/7/23-16:45
  * user-service统一错误码为  005
  */
 public enum OrderRetCode {
     // 系统公用
-    SUCCESS                             ("000000", "成功"),
+    SUCCESS("000000", "成功"),
 
-    REQUISITE_PARAMETER_NOT_EXIST       ("005073", "必要的参数不能为空"),
+    REQUISITE_PARAMETER_NOT_EXIST("005073", "必要的参数不能为空"),
+    INIT_ORDER_EXCEPTION("005074", "订单初始化异常"),
 
 
-    PIPELINE_RUN_EXCEPTION              ("005094","系统异常"),
-    SHIPPING_DB_SAVED_FAILED            ("005095","物流信息保存数据库失败"),
-    DB_SAVE_EXCEPTION                   ("005096","数据保存异常"),
-    DB_EXCEPTION                        ("005097", "数据库异常"),
-    SYSTEM_TIMEOUT                      ("005098", "系统超时"),
-    SYSTEM_ERROR                        ("005099", "系统错误");
+    PIPELINE_RUN_EXCEPTION("005094", "系统异常"),
+    SHIPPING_DB_SAVED_FAILED("005095", "物流信息保存数据库失败"),
+    DB_SAVE_EXCEPTION("005096", "数据保存异常"),
+    DB_EXCEPTION("005097", "数据库异常"),
+    SYSTEM_TIMEOUT("005098", "系统超时"),
+    SYSTEM_ERROR("005099", "系统错误");
     private String code;
     private String message;
 

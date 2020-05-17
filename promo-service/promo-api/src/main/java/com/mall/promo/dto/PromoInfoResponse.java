@@ -18,6 +18,6 @@ import java.util.List;
 public class PromoInfoResponse extends AbstractResponse {
     private static final long serialVersionUID = 5767225913239809439L;
     private Integer sessionId;
-    private Integer psId;
+    private Long psId;
     private List<PromoItemInfoDto> productList;
 }

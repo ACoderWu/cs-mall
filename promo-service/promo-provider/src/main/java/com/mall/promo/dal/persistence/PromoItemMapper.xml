@@ -12,4 +12,22 @@
     <sql id="BaseColumns">
         id,ps_id,item_id,seckill_price,item_stock
     </sql>
+    <update id="updateStock" parameterType="map">
+        update tb_promo_item
+        set item_stock = item_stock - #{num}
+        where ps_id = #{psId}
+          and item_id = #{itemId}
+          and stcok_num > 0
+    </update>
+    <select id="selectPromoItemInfoDtoByPsId" resultType="com.mall.promo.dto.PromoItemInfoDto" parameterType="long">
+        select p.item_id       as id,
+               p.seckill_price as seckillPrice,
+               p.item_stock    as inventory,
+               q.title         as productName,
+               q.image         as picUrl,
+               q.price         as price
+        from tb_promo_item as p
+                 left join tb_item as q on p.item_id = q.id
+        where p.ps_id = #{psId}
+    </select>
 </mapper>
