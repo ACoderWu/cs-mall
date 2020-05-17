@@ -6,7 +6,6 @@ import com.mall.order.biz.handler.InitOrderHandler;
 import com.mall.order.constant.OrderRetCode;
 import com.mall.order.dto.CreateSeckillOrderRequest;
 import com.mall.order.dto.CreateSeckillOrderResponse;
-import com.mall.promo.dto.CreatePromoOrderResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
