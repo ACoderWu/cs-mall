@@ -1,4 +1,4 @@
-package com.mall.shopping.services.cache;
+package com.mall.promo.cache;
 
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
@@ -8,9 +8,8 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @Author: Li Qing
- * @Create: 2020/5/18 11:37
- * @Version: 1.0
+ *  ciggar
+ * create-date: 2019/7/24-17:17
  */
 @Service
 public class CacheManager {

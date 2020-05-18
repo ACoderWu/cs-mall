@@ -15,6 +15,7 @@ import java.math.BigDecimal;
  **/
 @Data
 public class CreateSeckillOrderRequest extends AbstractRequest {
+    private static final long serialVersionUID = -4062543967890940083L;
     private Long userId;
     private String username;
     private Long productId;

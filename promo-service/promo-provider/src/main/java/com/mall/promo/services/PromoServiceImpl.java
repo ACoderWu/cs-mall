@@ -11,6 +11,7 @@ import com.mall.promo.dal.entitys.PromoSession;
 import com.mall.promo.dal.persistence.PromoItemMapper;
 import com.mall.promo.dal.persistence.PromoSessionMapper;
 import com.mall.promo.dto.*;
+import com.mall.promo.mq.MQPromoTransactionProducer;
 import org.apache.dubbo.config.annotation.Reference;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class PromoServiceImpl implements PromoService {
     PromoSessionMapper promoSessionMapper;
     @Reference(check = false)
     PromoOrderService promoOrderService;
+    @Autowired
+    MQPromoTransactionProducer promoTransactionProducer;
 
     @Override
     public PromoInfoResponse queryPromoInfo(PromoInfoRequest request) {
@@ -61,6 +64,29 @@ public class PromoServiceImpl implements PromoService {
             e.printStackTrace();
             throw new BizException(PromoRetCode.DB_EXCEPTION.getMessage());
         }
+        return response;
+    }
+
+    /**
+     * 分布式事务创建秒杀订单
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public CreatePromoOrderResponse createPromoOrderInTransaction(CreatePromoOrderRequest request) {
+        CreatePromoOrderResponse response = new CreatePromoOrderResponse();
+        request.requestCheck();
+        if (promoTransactionProducer.sendPromoOrderTransaction(request)) {
+            PromoItem promoItem = getPromoItem(request);
+            response.setProductId(promoItem.getItemId());
+            response.setInventory(promoItem.getStockNum());
+            response.setCode(PromoRetCode.SUCCESS.getCode());
+            response.setMsg(PromoRetCode.SUCCESS.getMessage());
+            return response;
+        }
+        response.setCode(PromoRetCode.SYSTEM_ERROR.getCode());
+        response.setMsg(PromoRetCode.SYSTEM_ERROR.getMessage());
         return response;
     }
 
@@ -108,8 +134,9 @@ public class PromoServiceImpl implements PromoService {
         example.createCriteria()
                 .andEqualTo("itemId", request.getProductId())
                 .andEqualTo("psId", request.getPsId());
-
-        return null;
+        PromoItem promoItem = promoItemMapper.selectOneByExample(example);
+        if (promoItem == null) throw new BizException(PromoRetCode.DB_EXCEPTION.getMessage());
+        return promoItem;
     }
 
     /**
@@ -139,5 +166,14 @@ public class PromoServiceImpl implements PromoService {
         example.createCriteria().andEqualTo("sessionId", sessionId).andEqualTo("yyyyMMdd", yyyyMMdd);
         List<PromoSession> promoSessions = promoSessionMapper.selectByExample(example);
         return promoSessions.stream().map(PromoSession::getId).collect(Collectors.toList());
+    }
+
+    public CreateSeckillOrderRequest toSecKillOrderRequest(CreatePromoOrderRequest request) {
+        CreateSeckillOrderRequest seckillOrderRequest = new CreateSeckillOrderRequest();
+        seckillOrderRequest.setUserId(request.getUserId());
+        seckillOrderRequest.setUsername(request.getUserName());
+        seckillOrderRequest.setProductId(request.getProductId());
+        seckillOrderRequest.setPrice(getPromoItem(request).getSeckillPrice());
+        return seckillOrderRequest;
     }
 }

@@ -25,4 +25,6 @@ public class PromoOrderConverter {
         orderContext.setOrderTotal(seckillOrderRequest.getPrice());
         return orderContext;
     }
+
+
 }

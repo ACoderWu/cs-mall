@@ -39,4 +39,5 @@ public class PromoOrderServiceImpl implements PromoOrderService {
         response.setMsg(OrderRetCode.INIT_ORDER_EXCEPTION.getMessage());
         return response;
     }
+
 }

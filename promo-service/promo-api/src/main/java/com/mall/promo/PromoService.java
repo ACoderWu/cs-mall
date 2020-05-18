@@ -15,5 +15,7 @@ import java.sql.SQLException;
 public interface PromoService {
     PromoInfoResponse queryPromoInfo(PromoInfoRequest request);
 
+    CreatePromoOrderResponse createPromoOrderInTransaction(CreatePromoOrderRequest request);
+
     CreatePromoOrderResponse createPromoOrder(CreatePromoOrderRequest request);
 }

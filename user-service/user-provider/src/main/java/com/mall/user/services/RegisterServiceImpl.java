@@ -2,6 +2,7 @@ package com.mall.user.services;
 
 import com.alibaba.fastjson.JSON;
 import com.mall.commons.tool.exception.ValidateException;
+import com.mall.user.IRegisterService;
 import com.mall.user.constants.SysRetCodeConstants;
 import com.mall.user.dal.entitys.Member;
 import com.mall.user.dal.entitys.UserVerify;
