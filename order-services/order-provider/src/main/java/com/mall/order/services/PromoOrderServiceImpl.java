@@ -30,7 +30,7 @@ public class PromoOrderServiceImpl implements PromoOrderService {
     @Override
     public CreateSeckillOrderResponse createPromoOrder(CreateSeckillOrderRequest request) {
         CreateSeckillOrderResponse response = new CreateSeckillOrderResponse();
-        CreateOrderContext orderContext = promoOrderConverter.toCreateOrderRequest(request);
+        CreateOrderContext orderContext = promoOrderConverter.toCreateOrderContext(request);
         if (handler.handle(orderContext)) {
             response.setCode(OrderRetCode.SUCCESS.getCode());
             return response;

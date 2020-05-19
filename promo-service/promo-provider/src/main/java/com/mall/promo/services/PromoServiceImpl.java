@@ -5,6 +5,7 @@ import com.mall.order.PromoOrderService;
 import com.mall.order.dto.CreateSeckillOrderRequest;
 import com.mall.order.dto.CreateSeckillOrderResponse;
 import com.mall.promo.PromoService;
+import com.mall.promo.cache.CacheManager;
 import com.mall.promo.constant.PromoRetCode;
 import com.mall.promo.dal.entitys.PromoItem;
 import com.mall.promo.dal.entitys.PromoSession;
@@ -38,6 +39,8 @@ public class PromoServiceImpl implements PromoService {
     PromoOrderService promoOrderService;
     @Autowired
     MQPromoTransactionProducer promoTransactionProducer;
+    @Autowired
+    CacheManager cacheManager;
 
     @Override
     public PromoInfoResponse queryPromoInfo(PromoInfoRequest request) {
@@ -77,10 +80,22 @@ public class PromoServiceImpl implements PromoService {
     public CreatePromoOrderResponse createPromoOrderInTransaction(CreatePromoOrderRequest request) {
         CreatePromoOrderResponse response = new CreatePromoOrderResponse();
         request.requestCheck();
+        String key = "PROMO_ORDER_INVENTORY_NO_ENOUGH" + "-" + request.getPsId() + "-" + request.getProductId();
+        String value = "true";
+        ////放到controller检查
+        //if (value.equals(cacheManager.checkCache(key))) {
+        //    response.setCode(PromoRetCode.STOCK_NO_ENOUGH.getCode());
+        //    response.setMsg(PromoRetCode.STOCK_NO_ENOUGH.getMessage());
+        //    return response;
+        //}
         if (promoTransactionProducer.sendPromoOrderTransaction(request)) {
             PromoItem promoItem = getPromoItem(request);
+            Integer stockNum = promoItem.getStockNum();
+            response.setInventory(stockNum);
+            if (stockNum < 1) {
+                cacheManager.setCache(key, value, 1);
+            }
             response.setProductId(promoItem.getItemId());
-            response.setInventory(promoItem.getStockNum());
             response.setCode(PromoRetCode.SUCCESS.getCode());
             response.setMsg(PromoRetCode.SUCCESS.getMessage());
             return response;

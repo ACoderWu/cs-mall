@@ -6,14 +6,12 @@ import com.mall.order.biz.handler.InitOrderHandler;
 import com.mall.order.dto.CreateSeckillOrderRequest;
 import com.mall.order.dto.CreateSeckillOrderResponse;
 import com.mall.promo.constant.PromoRetCode;
-import com.mall.promo.dto.CreatePromoOrderRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.client.exception.MQClientException;
-import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,8 +49,11 @@ public class MQPromoTransactionConsumer {
                 String str = new String(msg.getBody());
                 CreateSeckillOrderRequest request = JSON.parseObject(str, CreateSeckillOrderRequest.class);
                 CreateSeckillOrderResponse response = promoOrderService.createPromoOrder(request);
-                if (!PromoRetCode.SUCCESS.getCode().equals(response.getCode()))
+                if (!PromoRetCode.SUCCESS.getCode().equals(response.getCode())) {
+                    if (msg.getReconsumeTimes() > 16)
+                        log.error("MQPromoTransactionConsumer", JSON.toJSONString(request), response.getMsg());
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                }
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
         });
