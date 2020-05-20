@@ -12,9 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = "com.cskaoyan.gateway")
 @SpringBootApplication
 public class GatewayApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(GatewayApplication.class, args);
     }
-
 }

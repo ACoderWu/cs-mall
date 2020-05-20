@@ -1,5 +1,6 @@
 package com.mall.user.services;
 
+import com.mall.user.IUserVerifyService;
 import com.mall.user.constants.SysRetCodeConstants;
 import com.mall.user.dal.entitys.Member;
 import com.mall.user.dal.entitys.UserVerify;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -34,7 +36,7 @@ public class UserVerifyServiceImpl implements IUserVerifyService {
     @Override
     @Transactional
     public UserVerifyResponse verify(UserVerifyRequest request) {
-        UserVerifyResponse userVerifyResponse = new UserVerifyResponse();
+        /*UserVerifyResponse userVerifyResponse = new UserVerifyResponse();
 
         request.requestCheck();
         //根据uuid去查询userVerify这个表
@@ -89,6 +91,58 @@ public class UserVerifyServiceImpl implements IUserVerifyService {
         userVerifyResponse.setCode(SysRetCodeConstants.SUCCESS.getCode());
         userVerifyResponse.setMsg(SysRetCodeConstants.SUCCESS.getMessage());
 
+        return userVerifyResponse;*/
+
+        request.requestCheck();
+        UserVerifyResponse userVerifyResponse = new UserVerifyResponse();
+        //根据uuid去查询userVerify这个表
+        Example example = new Example(UserVerify.class);
+        example.createCriteria().andEqualTo("uuid", request.getUuid());
+        List<UserVerify> userVerifyList = userVerifyMapper.selectByExample(example);
+
+        if(CollectionUtils.isEmpty(userVerifyList)){
+            userVerifyResponse.setCode(SysRetCodeConstants.USER_INFOR_INVALID.getCode());
+            userVerifyResponse.setMsg(SysRetCodeConstants.USER_INFOR_INVALID.getMessage());
+            return userVerifyResponse;
+        }
+        UserVerify userVerify = userVerifyList.get(0);
+        userVerify.setIsVerify("Y");
+        String username = userVerify.getUsername();
+
+        if(!username.equals(request.getUserName())){
+            userVerifyResponse.setCode(SysRetCodeConstants.USER_INFOR_INVALID.getCode());
+            userVerifyResponse.setMsg(SysRetCodeConstants.USER_INFOR_INVALID.getMessage());
+            return userVerifyResponse;
+        }
+        int effectedRows = userVerifyMapper.updateByExample(userVerify, example);
+        if(effectedRows < 1){
+            userVerifyResponse.setCode(SysRetCodeConstants.USER_INFOR_UPDATE_FAIL.getCode());
+            userVerifyResponse.setMsg(SysRetCodeConstants.USER_INFOR_UPDATE_FAIL.getMessage());
+            return userVerifyResponse;
+        }
+
+
+        Example memberExample = new Example(Member.class);
+        memberExample.createCriteria().andEqualTo("username", request.getUserName());
+        List<Member> memberList = memberMapper.selectByExample(memberExample);
+
+        if(CollectionUtils.isEmpty(memberList)){
+            userVerifyResponse.setCode(SysRetCodeConstants.USER_INFOR_UPDATE_FAIL.getCode());
+            userVerifyResponse.setMsg(SysRetCodeConstants.USER_INFOR_UPDATE_FAIL.getMessage());
+            return userVerifyResponse;
+        }
+
+        Member member = memberList.get(0);
+        member.setIsVerified("Y");
+        int effectedRows2 = memberMapper.updateByExample(member, memberExample);
+        if(effectedRows2 < 1){
+            userVerifyResponse.setCode(SysRetCodeConstants.USER_INFOR_UPDATE_FAIL.getCode());
+            userVerifyResponse.setMsg(SysRetCodeConstants.USER_INFOR_UPDATE_FAIL.getMessage());
+            return userVerifyResponse;
+        }
+        userVerifyResponse.setCode(SysRetCodeConstants.SUCCESS.getCode());
+        userVerifyResponse.setMsg(SysRetCodeConstants.SUCCESS.getMessage());
         return userVerifyResponse;
+
     }
 }

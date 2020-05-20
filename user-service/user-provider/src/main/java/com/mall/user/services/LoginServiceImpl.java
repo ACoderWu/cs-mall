@@ -1,14 +1,12 @@
 package com.mall.user.services;
 
 import com.alibaba.fastjson.JSON;
+import com.mall.user.ILoginService;
 import com.mall.user.constants.SysRetCodeConstants;
 import com.mall.user.converter.UserConverterMapper;
 import com.mall.user.dal.entitys.Member;
 import com.mall.user.dal.persistence.MemberMapper;
-import com.mall.user.dto.CheckAuthRequest;
-import com.mall.user.dto.CheckAuthResponse;
-import com.mall.user.dto.UserLoginRequest;
-import com.mall.user.dto.UserLoginResponse;
+import com.mall.user.dto.*;
 import com.mall.user.utils.JwtTokenUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,12 +88,11 @@ public class LoginServiceImpl implements ILoginService {
         CheckAuthResponse response = new CheckAuthResponse();
         checkAuthRequest.requestCheck();
         String userInfo = JwtTokenUtils.builder().token(checkAuthRequest.getToken()).build().freeJwt();
-        if (StringUtils.isEmpty(userInfo)) {
+        if(StringUtils.isEmpty(userInfo)){
             response.setCode(SysRetCodeConstants.TOKEN_VALID_FAILED.getCode());
             response.setMsg(SysRetCodeConstants.TOKEN_VALID_FAILED.getMessage());
-            return  response;
+            return response;
         }
-
         response.setUserinfo(userInfo);
         response.setMsg(SysRetCodeConstants.SUCCESS.getMessage());
         response.setCode(SysRetCodeConstants.SUCCESS.getCode());

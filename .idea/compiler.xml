@@ -7,25 +7,30 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="commons-tool" />
         <module name="order-provider" />
+        <module name="pay-provider" />
+        <module name="pay-api" />
         <module name="gateway" />
-        <module name="commons-core" />
+        <module name="commons-tool" />
         <module name="shopping-provider" />
         <module name="user-sdk" />
         <module name="comment-api" />
         <module name="user-provider" />
         <module name="commons-mq" />
+        <module name="pay-sdk" />
         <module name="promo-api" />
         <module name="promo-provider" />
         <module name="comment-provider" />
         <module name="shopping-api" />
         <module name="commons-lock" />
         <module name="user-api" />
+        <module name="commons-core" />
         <module name="order-api" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="cashier-api" target="1.8" />
+      <module name="cashier-services" target="1.8" />
       <module name="comment-api" target="1.8" />
       <module name="comment-provider" target="1.8" />
       <module name="comment-service" target="1.8" />
@@ -39,6 +44,10 @@
       <module name="order-api" target="1.8" />
       <module name="order-provider" target="1.8" />
       <module name="order-services" target="1.8" />
+      <module name="pay-api" target="1.8" />
+      <module name="pay-provider" target="1.8" />
+      <module name="pay-sdk" target="1.8" />
+      <module name="pay-services" target="1.8" />
       <module name="promo-api" target="1.8" />
       <module name="promo-provider" target="1.8" />
       <module name="promo-service" target="1.8" />

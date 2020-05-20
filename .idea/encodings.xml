@@ -27,6 +27,7 @@
     <file url="file://$PROJECT_DIR$/order-services/order-provider" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/order-services/order-provider/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/order-services/order-provider/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/pay-services/pay-api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/promo-service/promo-provider/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/promo-service/promo-provider/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shopping-service" charset="UTF-8" />

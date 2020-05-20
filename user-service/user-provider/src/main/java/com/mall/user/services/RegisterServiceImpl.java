@@ -15,6 +15,7 @@ import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 import tk.mybatis.mapper.entity.Example;
@@ -30,6 +31,7 @@ import java.util.UUID;
  **/
 @Service
 @Slf4j
+@Transactional
 public class RegisterServiceImpl implements IRegisterService {
 
     @Autowired
@@ -103,11 +105,10 @@ public class RegisterServiceImpl implements IRegisterService {
      * @param registerRequest
      */
     private void sendEmail(String uuid, UserRegisterRequest registerRequest) {
-
         SimpleMailMessage message = new SimpleMailMessage();
 
         message.setSubject("CSMALL用户激活");
-        message.setFrom("ciggarnot@163.com");
+        message.setFrom("yjswc1076@163.com");
         message.setTo(registerRequest.getEmail());
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("http://localhost:8080/user/verify?uid=").append(uuid).append("&username=").append(registerRequest.getUserName());
@@ -115,7 +116,6 @@ public class RegisterServiceImpl implements IRegisterService {
         message.setText(stringBuilder.toString());
 
         mailSender.send(message);
-
     }
 
 
@@ -130,4 +130,6 @@ public class RegisterServiceImpl implements IRegisterService {
             throw new ValidateException(SysRetCodeConstants.USERNAME_ALREADY_EXISTS.getCode(),SysRetCodeConstants.USERNAME_ALREADY_EXISTS.getMessage());
         }
     }
+
+
 }

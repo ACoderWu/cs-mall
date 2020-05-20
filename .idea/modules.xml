@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/cashier-services/cashier-services.iml" filepath="$PROJECT_DIR$/cashier-services/cashier-services.iml" />
       <module fileurl="file://$PROJECT_DIR$/comment-service/comment-api/comment-api.iml" filepath="$PROJECT_DIR$/comment-service/comment-api/comment-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/comment-service/comment-provider/comment-provider.iml" filepath="$PROJECT_DIR$/comment-service/comment-provider/comment-provider.iml" />
       <module fileurl="file://$PROJECT_DIR$/comment-service/comment-service.iml" filepath="$PROJECT_DIR$/comment-service/comment-service.iml" />
@@ -15,6 +16,10 @@
       <module fileurl="file://$PROJECT_DIR$/order-services/order-api/order-api.iml" filepath="$PROJECT_DIR$/order-services/order-api/order-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/order-services/order-provider/order-provider.iml" filepath="$PROJECT_DIR$/order-services/order-provider/order-provider.iml" />
       <module fileurl="file://$PROJECT_DIR$/order-services/order-services.iml" filepath="$PROJECT_DIR$/order-services/order-services.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pay-services/pay-api/pay-api.iml" filepath="$PROJECT_DIR$/pay-services/pay-api/pay-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pay-services/pay-provider/pay-provider.iml" filepath="$PROJECT_DIR$/pay-services/pay-provider/pay-provider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pay-services/pay-sdk/pay-sdk.iml" filepath="$PROJECT_DIR$/pay-services/pay-sdk/pay-sdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pay-services/pay-services.iml" filepath="$PROJECT_DIR$/pay-services/pay-services.iml" />
       <module fileurl="file://$PROJECT_DIR$/promo-service/promo-api/promo-api.iml" filepath="$PROJECT_DIR$/promo-service/promo-api/promo-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/promo-service/promo-provider/promo-provider.iml" filepath="$PROJECT_DIR$/promo-service/promo-provider/promo-provider.iml" />
       <module fileurl="file://$PROJECT_DIR$/promo-service/promo-service.iml" filepath="$PROJECT_DIR$/promo-service/promo-service.iml" />

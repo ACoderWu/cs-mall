@@ -43,7 +43,7 @@ public interface OrderConverter {
             @Mapping(source = " order.payment", target = "orderTotal"),
             @Mapping(source = " order.userId", target = "userId"),
             @Mapping(source = "orderShipping.receiverPhone", target = "tel"),
-            @Mapping(source = "orderShipping.receiverAddress", target = "StreetName")
+            @Mapping(source = "orderShipping.receiverAddress", target = "streetName")
     })
     SpecialOrderResponse orderAndShipping2specialRes(Order order,OrderShipping orderShipping);
 }
