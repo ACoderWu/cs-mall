@@ -166,5 +166,6 @@
     <orderEntry type="library" name="Maven: org.jodd:jodd-bean:5.0.10" level="project" />
     <orderEntry type="library" name="Maven: org.jodd:jodd-core:5.0.10" level="project" />
     <orderEntry type="module" module-name="pay-api" />
+    <orderEntry type="library" name="Maven: pay-services:pay-api:1.0-SNAPSHOT" level="project" />
   </component>
 </module>

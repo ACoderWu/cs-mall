@@ -10,6 +10,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public interface PromoConverter {
 
     @Mappings({
             @Mapping(source = "promoItem.itemId", target = "id"),
-            @Mapping(source = "promoItem.itemStock", target = "inventory"),
+            @Mapping(source = "promoItem.stockNum", target = "inventory"),
             @Mapping(source = "promoItem.seckillPrice", target = "seckillPrice"),
             @Mapping(source = "item.image", target = "picUrl"),
             @Mapping(source = "item.price", target = "price"),
@@ -32,15 +33,7 @@ public interface PromoConverter {
     PromoItemInfoDto promoItemAndItem2InfoRes(PromoItem promoItem, Item item);
 
     //会循环调用单个转换方法
-    List<PromoItemInfoDto> promoItemAndItem2InfoRes(List<PromoItem> promoItemList, List<Item> itemList);
+    ArrayList<PromoItemInfoDto> promoItemAndItem2InfoRes(ArrayList<PromoItem> promoItemList,ArrayList<Item> itemList);
 
-    @Mappings({
-            @Mapping(source = "itemId", target = "id"),
-            @Mapping(source = "promoItem.itemStock", target = "inventory"),
-            @Mapping(source = "promoItem.seckillPrice", target = "seckillPrice"),
-            @Mapping(source = "item.image", target = "picUrl"),
-            @Mapping(source = "item.price", target = "price"),
-            @Mapping(source = "item.title", target = "productName")
-    })
     CreateSeckillOrderRequest toSecKillRequest(CreatePromoOrderRequest request);
 }

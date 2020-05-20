@@ -1,6 +1,7 @@
 package com.mall.user.bootstrap;
 
 import com.alibaba.fastjson.JSON;
+import com.mall.user.ILoginService;
 import com.mall.user.dto.CheckAuthRequest;
 import com.mall.user.dto.CheckAuthResponse;
 import com.mall.user.dto.UserLoginRequest;
