@@ -13,8 +13,7 @@ import com.mall.user.dto.KaptchaCodeResponse;
 import com.mall.user.dto.UserLoginRequest;
 import com.mall.user.dto.UserLoginResponse;
 import com.mall.user.intercepter.TokenIntercepter;
-import jdk.nashorn.internal.ir.annotations.Reference;
-import org.omg.PortableInterceptor.Interceptor;
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
@@ -26,10 +25,10 @@ import java.util.Map;
 @RequestMapping("/user")
 public class LoginController {
 
-    @Reference
+    @Reference(check = false)
     private IKaptchaService iKaptchaService;
 
-    @Reference
+    @Reference(check = false)
     private ILoginService iLoginService;
 
 
