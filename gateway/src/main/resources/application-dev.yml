@@ -1,7 +1,7 @@
 dubbo:
   application:
     name: gateway
-    owner: ciggar
+    owner: qing
   registry:
     address: zookeeper://127.0.0.1:2181
     check: true
@@ -14,4 +14,4 @@ dubbo:
     group: dubbo-dev
   scan:
     base-packages: com.cskaoyan.gateway
-captchaFlag : false
+captchaFlag: false

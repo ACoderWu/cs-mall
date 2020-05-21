@@ -5,4 +5,9 @@ mybatis:
   mapper-locations: classpath*:com/mall/promo/dal/persistence/*Mapper.xml"
   type-aliases-package: com.mall.promo.dal.entitys
 
+mq:
+  nameserver:
+    addr: 127.0.0.1:9876
+  topicname: promo_order
+
 

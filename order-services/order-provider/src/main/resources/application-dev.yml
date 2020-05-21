@@ -28,7 +28,6 @@ spring:
         max-idle: 10
         max-wait: 3000
         min-idle: 4
-
 dubbo:
   application:
     name: order-service
@@ -52,7 +51,4 @@ logging:
   config:
     classpath: logback.xml
 
-mq:
-  servername:
-    addr: 127.0.0.1:9876
-  topicname: promo_orderl
+

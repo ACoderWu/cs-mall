@@ -2,7 +2,6 @@ package com.mall.order.consumer;
 
 import com.alibaba.fastjson.JSON;
 import com.mall.order.PromoOrderService;
-import com.mall.order.biz.handler.InitOrderHandler;
 import com.mall.order.dto.CreateSeckillOrderRequest;
 import com.mall.order.dto.CreateSeckillOrderResponse;
 import com.mall.promo.constant.PromoRetCode;

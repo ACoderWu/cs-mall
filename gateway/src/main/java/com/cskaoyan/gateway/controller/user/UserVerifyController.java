@@ -8,7 +8,6 @@ import com.mall.user.constants.SysRetCodeConstants;
 import com.mall.user.dto.UserVerifyRequest;
 import com.mall.user.dto.UserVerifyResponse;
 import org.apache.dubbo.config.annotation.Reference;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/user")
 public class UserVerifyController {
 
-    @Reference
+    @Reference(check = false)
     private IUserVerifyService iUserVerifyService;
 
     @GetMapping("/verify")
