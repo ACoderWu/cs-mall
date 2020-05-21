@@ -1,7 +1,6 @@
 com\cskaoyan\gateway\controller\user\LoginController.class
 com\cskaoyan\gateway\config\Swagger2$1.class
 com\cskaoyan\gateway\form\shopping\AddressForm.class
-com\cskaoyan\gateway\config\CorsConfig.class
 com\cskaoyan\gateway\bootstrap\GatewayApplication.class
 com\cskaoyan\gateway\controller\shopping\AddressController.class
 com\cskaoyan\gateway\controller\user\UserVerifyController.class

@@ -48,9 +48,8 @@ public class PromoController {
         executorService = Executors.newFixedThreadPool(100);
 
     }
-
-    @GetMapping("/seckilllist")
     @Anoymous
+    @GetMapping("seckilllist")
     public ResponseData getPromoList(@RequestParam Integer sessionId) {
         String yyyyMMdd = toYYYYMMdd(new Date());
         PromoInfoRequest request = new PromoInfoRequest(sessionId, yyyyMMdd);
