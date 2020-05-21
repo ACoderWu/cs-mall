@@ -1,4 +1,4 @@
-package com.mall.shopping.services.cache;
+package com.mall.shopping.cache;
 
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;

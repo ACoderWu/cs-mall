@@ -7,7 +7,6 @@ import com.mall.commons.result.ResponseData;
 import com.mall.commons.result.ResponseUtil;
 import com.mall.shopping.constants.ShoppingRetCode;
 import com.mall.user.IAddressService;
-import com.mall.user.annotation.Anoymous;
 import com.mall.user.constants.SysRetCodeConstants;
 import com.mall.user.dto.*;
 import com.mall.user.intercepter.TokenIntercepter;
