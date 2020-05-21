@@ -18,7 +18,7 @@
       <module fileurl="file://$PROJECT_DIR$/order-services/order-services.iml" filepath="$PROJECT_DIR$/order-services/order-services.iml" />
       <module fileurl="file://$PROJECT_DIR$/pay-services/pay-api/pay-api.iml" filepath="$PROJECT_DIR$/pay-services/pay-api/pay-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/pay-services/pay-provider/pay-provider.iml" filepath="$PROJECT_DIR$/pay-services/pay-provider/pay-provider.iml" />
-      <module fileurl="file://$PROJECT_DIR$/pay-services/pay-sdk/pay-sdk.iml" filepath="$PROJECT_DIR$/pay-services/pay-sdk/pay-sdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pay-services/pay-sdk-ali/pay-sdk-ali.iml" filepath="$PROJECT_DIR$/pay-services/pay-sdk-ali/pay-sdk-ali.iml" />
       <module fileurl="file://$PROJECT_DIR$/pay-services/pay-services.iml" filepath="$PROJECT_DIR$/pay-services/pay-services.iml" />
       <module fileurl="file://$PROJECT_DIR$/promo-service/promo-api/promo-api.iml" filepath="$PROJECT_DIR$/promo-service/promo-api/promo-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/promo-service/promo-provider/promo-provider.iml" filepath="$PROJECT_DIR$/promo-service/promo-provider/promo-provider.iml" />

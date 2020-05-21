@@ -11,7 +11,8 @@ import lombok.*;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PrePayResponse extends AbstractResponse {
     private static final long serialVersionUID = -8468225739747778565L;
     private String QRCodeUrl;

@@ -13,7 +13,6 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
 public class QueryPayResponse extends AbstractResponse {
     private static final long serialVersionUID = 7124011968677187232L;
 }

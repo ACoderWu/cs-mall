@@ -11,7 +11,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @Author: Li Qing

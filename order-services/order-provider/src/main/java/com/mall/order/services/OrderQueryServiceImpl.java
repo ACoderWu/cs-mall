@@ -176,6 +176,13 @@ public class OrderQueryServiceImpl implements OrderQueryService {
         example.createCriteria().andEqualTo(orderId).andIsNotNull("paymentTime");
         return orderMapper.selectCountByExample(example) > 0;
     }
+
+
+
+    @Override
+    public int updatePayStatus(OrderDto order) {
+        return 0;
+    }
 }
 
 

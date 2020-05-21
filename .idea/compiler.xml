@@ -13,14 +13,14 @@
         <module name="gateway" />
         <module name="commons-tool" />
         <module name="shopping-provider" />
+        <module name="comment-provider" />
         <module name="user-sdk" />
         <module name="comment-api" />
         <module name="user-provider" />
         <module name="commons-mq" />
-        <module name="pay-sdk" />
         <module name="promo-api" />
+        <module name="pay-sdk-ali" />
         <module name="promo-provider" />
-        <module name="comment-provider" />
         <module name="shopping-api" />
         <module name="commons-lock" />
         <module name="user-api" />
@@ -46,7 +46,7 @@
       <module name="order-services" target="1.8" />
       <module name="pay-api" target="1.8" />
       <module name="pay-provider" target="1.8" />
-      <module name="pay-sdk" target="1.8" />
+      <module name="pay-sdk-ali" target="1.8" />
       <module name="pay-services" target="1.8" />
       <module name="promo-api" target="1.8" />
       <module name="promo-provider" target="1.8" />

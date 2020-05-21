@@ -1,6 +1,11 @@
 package com.mall.pay.dal.entitys;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -8,6 +13,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Table(name = "`tb_payment`")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class Payment {
     @Id
     @Column(name = "`id`")

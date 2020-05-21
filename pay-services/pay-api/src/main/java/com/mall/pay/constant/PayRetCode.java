@@ -9,6 +9,7 @@ public enum PayRetCode {
     // 系统公用
     SUCCESS("000000", "成功"),
     PAIED("000001", "支付成功"),
+    FAILPAID("005001", "支付失败"),
 
     REQUISITE_PARAMETER_NOT_EXIST("005073", "必要的参数不能为空"),
 

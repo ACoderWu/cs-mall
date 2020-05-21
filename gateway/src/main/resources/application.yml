@@ -3,5 +3,10 @@ spring:
     name: gateway
   profiles:
     active: dev
+  #    静态文件映射
+  mvc:
+    static-path-pattern: /image/**
+  resources:
+    static-locations: C:/Users/QING/Image/
 server:
   port: 8080
