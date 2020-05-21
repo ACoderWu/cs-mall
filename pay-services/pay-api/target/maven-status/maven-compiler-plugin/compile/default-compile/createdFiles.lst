@@ -1,0 +1,9 @@
+com\mall\pay\constant\PayRetCode.class
+com\mall\pay\PayService.class
+com\mall\pay\dto\QueryPayResponse.class
+com\mall\pay\dto\PrePayRequest.class
+com\mall\pay\dto\PrePayResponse.class
+com\mall\pay\dto\QueryPayRequest.class
+com\mall\pay\dto\QueryPayRequest$QueryPayRequestBuilder.class
+com\mall\pay\dto\QueryPayResponse$QueryPayResponseBuilder.class
+com\mall\pay\dto\PrePayRequest$PrePayRequestBuilder.class
