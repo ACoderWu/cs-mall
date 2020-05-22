@@ -73,7 +73,7 @@ public class LoginController {
         return new ResponseUtil<>().setData(object);
     }
 
-    @GetMapping("/logout")
+    @GetMapping("/loginOut")
     public ResponseData logOut(HttpServletRequest request, HttpServletResponse response){
         Cookie[] cookies = request.getCookies();
         if(cookies != null){

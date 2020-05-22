@@ -23,10 +23,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 public class RegisterController {
-    @Reference(check = false)
+    @Reference(timeout = 3000, check = false)
     private IKaptchaService iKaptchaService;
 
-    @Reference(check = false)
+    @Reference(timeout = 3000, check = false)
     private IRegisterService iRegisterService;
 
     @Anoymous

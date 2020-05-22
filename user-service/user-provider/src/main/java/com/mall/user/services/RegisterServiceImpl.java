@@ -66,7 +66,7 @@ public class RegisterServiceImpl implements IRegisterService {
         member.setState(1);
 
         int effectRows = memberMapper.insert(member);
-        if (effectRows != 1) {
+        if (effectRows < 1) {
             response.setCode(SysRetCodeConstants.USER_REGISTER_FAILED.getCode());
             response.setMsg(SysRetCodeConstants.USER_REGISTER_FAILED.getMessage());
             return response;
@@ -87,9 +87,9 @@ public class RegisterServiceImpl implements IRegisterService {
             return response;
         }
 
-        //3. 发送用户激活邮件
-        //TODO 发送用户激活邮件 激活邮件应该是一个链接 有一个接口去处理我们的用户激活 消息中间件MQ
-        sendEmail(uuid, registerRequest);
+        ////3. 发送用户激活邮件
+        ////TODO 发送用户激活邮件 激活邮件应该是一个链接 有一个接口去处理我们的用户激活 消息中间件MQ
+        //sendEmail(uuid, registerRequest);
 
         //打印日志
         log.info("用户注册成功，注册参数request:{},{}", JSON.toJSONString(registerRequest), "xxx");

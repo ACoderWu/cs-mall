@@ -90,13 +90,20 @@ public class PayServiceImpl implements PayService {
     @Override
     public PrePayResponse createPrePay(PrePayRequest request) {
         PrePayResponse response = new PrePayResponse();
+        String qrcodeName = null;
         if (request.getPayType().equals("alipay")) {
-            String qrcodeName = createPreAliPay(request);
+            qrcodeName = createPreAliPay(request);
             if (StringUtils.isBlank(qrcodeName)) {
                 response.setCode(PayRetCode.SYSTEM_ERROR.getCode());
                 response.setMsg(PayRetCode.SYSTEM_ERROR.getMessage());
                 return response;
             }
+            response.setCode(PayRetCode.SUCCESS.getCode());
+            response.setQRCodeUrl("http://localhost:8080/image/" + qrcodeName);
+            return response;
+        }
+        if("wechat_pay".equals(request.getPayType())){
+            qrcodeName = "qr-20200522163852.png";
             response.setCode(PayRetCode.SUCCESS.getCode());
             response.setQRCodeUrl("http://localhost:8080/image/" + qrcodeName);
             return response;
