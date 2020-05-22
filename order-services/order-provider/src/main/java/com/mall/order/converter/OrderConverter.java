@@ -39,9 +39,9 @@ public interface OrderConverter {
     OrderDto order2dto(Order order);
 
     @Mappings({
-            @Mapping(source = " order.buyerNick", target = "userName"),
-            @Mapping(source = " order.payment", target = "orderTotal"),
-            @Mapping(source = " order.userId", target = "userId"),
+            @Mapping(source = "order.buyerNick", target = "userName"),
+            @Mapping(source = "order.payment", target = "orderTotal"),
+            @Mapping(source = "order.userId", target = "userId"),
             @Mapping(source = "orderShipping.receiverPhone", target = "tel"),
             @Mapping(source = "orderShipping.receiverAddress", target = "streetName")
     })

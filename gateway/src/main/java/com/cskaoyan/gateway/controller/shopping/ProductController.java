@@ -78,7 +78,7 @@ public class ProductController {
      * @return
      */
     @Anoymous
-    @GetMapping("/recommed")
+    @GetMapping("/recommend")
     @ApiOperation("查询推荐的商品")
     public ResponseData recommend(){
         RecommendResponse response = productService.getRecommendGoods();

@@ -12,12 +12,16 @@ import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.message.MessageExt;
+import org.redisson.misc.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: Li Qing
@@ -46,7 +50,12 @@ public class MQPromoTransactionConsumer {
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
                 MessageExt msg = msgs.get(0);
                 String str = new String(msg.getBody());
-                CreateSeckillOrderRequest request = JSON.parseObject(str, CreateSeckillOrderRequest.class);
+                HashMap<String,Object> map = (HashMap<String, Object>) JSON.parseObject(str, HashMap.class);
+                CreateSeckillOrderRequest request = new CreateSeckillOrderRequest();
+                request.setUsername((String) map.get("userName"));
+                request.setProductId((Long) map.get("productId"));
+                request.setUserId((Long) map.get("userId"));
+                request.setPrice((BigDecimal) map.get("price"));
                 CreateSeckillOrderResponse response = promoOrderService.createPromoOrder(request);
                 if (!PromoRetCode.SUCCESS.getCode().equals(response.getCode())) {
                     if (msg.getReconsumeTimes() > 16)
