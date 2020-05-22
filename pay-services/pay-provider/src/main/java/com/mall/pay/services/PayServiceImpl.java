@@ -31,7 +31,9 @@ import com.mall.pay.utils.ZxingUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
@@ -42,6 +44,8 @@ import java.util.Date;
  * @Create: 2020/5/20 22:16
  * @Version: 1.0
  */
+@Component
+@Service
 public class PayServiceImpl implements PayService {
     private static Log log = LogFactory.getLog(PayServiceImpl.class);
     // 支付宝当面付2.0服务
@@ -94,7 +98,7 @@ public class PayServiceImpl implements PayService {
                 return response;
             }
             response.setCode(PayRetCode.SUCCESS.getCode());
-            response.setQRCodeUrl("localhost:8080/image/" + qrcodeName);
+            response.setQRCodeUrl("http://localhost:8080/image/" + qrcodeName);
             return response;
         }
 
@@ -198,8 +202,9 @@ public class PayServiceImpl implements PayService {
                 .payerAmount(request.getMoney())
                 .tradeNo(result.getResponse().getOutTradeNo())
                 .payNo("alipay" + request.getOrderId())
+                .status("0")
                 .build();
-        int ret = paymentMapper.insert(payment);
+        int ret = paymentMapper.insertSelective(payment);
         if (ret < 1) throw new BizException(PayRetCode.DB_SAVE_EXCEPTION.getMessage());
         return qrcodeName;
     }
@@ -286,7 +291,6 @@ public class PayServiceImpl implements PayService {
      * @return
      */
     private Payment queryPayment(String orderId) {
-
         Example example = new Example(Payment.class);
         example.createCriteria().andEqualTo("orderId", orderId);
         return paymentMapper.selectOneByExample(example);

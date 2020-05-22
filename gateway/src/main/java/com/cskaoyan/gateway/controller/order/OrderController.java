@@ -47,16 +47,16 @@ public class OrderController {
 
     @GetMapping("/order")
     @ApiOperation("获取当前用户的所有订单")
-    public ResponseData getAllOrders(@RequestBody OrderListRequest orderListRequest, HttpServletRequest servletRequest) {
+    public ResponseData getAllOrders(Integer size, Integer page, HttpServletRequest servletRequest) {
         String userInfo = (String) servletRequest.getAttribute(TokenIntercepter.USER_INFO_KEY);
         JSONObject object = JSON.parseObject(userInfo);
         Long uid = Long.parseLong(object.get("uid").toString());
-        orderListRequest.setUserId(uid);
+        OrderListRequest orderListRequest = OrderListRequest.builder().userId(uid).page(page).size(size).build();
         OrderListResponse orderListResponse = orderQueryService.queryOrderList(orderListRequest);
         if (!orderListResponse.getCode().equals(OrderRetCode.SUCCESS.getCode()))
             return new ResponseUtil<>().setErrorMsg(orderListResponse.getMsg());
         HashMap<String, Object> data = new HashMap<>();
-        data.put("data", orderListResponse);
+        data.put("data", orderListResponse.getDetailInfoList());
         return new ResponseUtil<>().setData(data);
     }
 
@@ -66,8 +66,9 @@ public class OrderController {
         String userInfo = (String) servletRequest.getAttribute(TokenIntercepter.USER_INFO_KEY);
         JSONObject object = JSON.parseObject(userInfo);
         Long uid = Long.parseLong(object.get("uid").toString());
-        SpecialOrderRequest request = new SpecialOrderRequest(orderId, uid);
+        SpecialOrderRequest request = new SpecialOrderRequest(uid, orderId);
         SpecialOrderResponse response = orderQueryService.queryOrder(request);
+        System.out.println(response);
         if (!response.getCode().equals(OrderRetCode.SUCCESS.getCode()))
             return new ResponseUtil<>().setErrorMsg(response.getMsg());
         return new ResponseUtil<>().setData(response);
@@ -92,7 +93,7 @@ public class OrderController {
         String userInfo = (String) servletRequest.getAttribute(TokenIntercepter.USER_INFO_KEY);
         JSONObject object = JSON.parseObject(userInfo);
         Long uid = Long.parseLong(object.get("uid").toString());
-        DeleteOrderRequest request = new DeleteOrderRequest(orderId.toString(),uid);
+        DeleteOrderRequest request = new DeleteOrderRequest(orderId.toString(), uid);
         DeleteOrderResponse response = orderQueryService.deleteOrder(request);
         if (!response.getCode().equals(OrderRetCode.SUCCESS.getCode()))
             return new ResponseUtil<>().setErrorMsg(response.getMsg());

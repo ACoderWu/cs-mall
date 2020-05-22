@@ -5,7 +5,6 @@ import com.github.pagehelper.PageInfo;
 import com.mall.commons.tool.exception.BizException;
 import com.mall.order.OrderQueryService;
 import com.mall.order.constant.OrderRetCode;
-import com.mall.order.converter.OrderConverter;
 import com.mall.order.dal.entitys.Order;
 import com.mall.order.dal.entitys.OrderItem;
 import com.mall.order.dal.entitys.OrderShipping;
@@ -17,6 +16,7 @@ import com.mall.order.dal.persistence.StockMapper;
 import com.mall.order.dto.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.common.utils.CollectionUtils;
+import org.apache.dubbo.common.utils.StringUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,17 +40,26 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     OrderItemMapper orderItemMapper;
     @Autowired
     OrderShippingMapper orderShippingMapper;
-    @Autowired
-    OrderConverter orderConverter;
+    //@Autowired
+    //OrderConverter orderConverter;
     @Autowired
     StockMapper stockMapper;
 
     @Override
     public OrderListResponse queryOrderList(OrderListRequest orderListRequest) {
         PageHelper.startPage(orderListRequest.getPage(), orderListRequest.getSize());
-        PageHelper.orderBy(orderListRequest.getSort());
-        List<OrderDetailInfo> orders = orderMapper.queryOrderDetailListByUID(orderListRequest.getUserId());
+        String sort = orderListRequest.getSort();
+        if (!StringUtils.isBlank(sort)) {
+            PageHelper.orderBy(sort);
+        }
+        List<OrderDetailInfo> orders = null;
         OrderListResponse orderListResponse = new OrderListResponse();
+        orders = orderMapper.queryOrderDetailListByUID(orderListRequest.getUserId());
+        if (orders == null) {
+            orderListResponse.setCode(OrderRetCode.DB_EXCEPTION.getCode());
+            orderListResponse.setMsg(OrderRetCode.DB_EXCEPTION.getMessage());
+            return orderListResponse;
+        }
         orderListResponse.setTotal(PageInfo.of(orders).getTotal());
         if (!CollectionUtils.isEmpty(orders)) {
             for (OrderDetailInfo order : orders) {
@@ -62,21 +71,35 @@ public class OrderQueryServiceImpl implements OrderQueryService {
             }
         }
         orderListResponse.setDetailInfoList(orders);
+        orderListResponse.setCode(OrderRetCode.SUCCESS.getCode());
+        orderListResponse.setMsg(OrderRetCode.SUCCESS.getMessage());
         return orderListResponse;
     }
 
     @Override
     public SpecialOrderResponse queryOrder(SpecialOrderRequest request) {
+        request.requestCheck();
+        SpecialOrderResponse specialOrderResponse = new SpecialOrderResponse();
         String orderId = request.getOrderId().toString();
         Order order = selectOrderByOrderId(orderId);
-        //非法访问
-        if (request.getUserId().equals(order.getUserId()))
-            throw new BizException("非法访问");
+        if (order != null) {
+            //非法访问
+            if (!request.getUserId().equals(order.getUserId()))
+                throw new BizException("非法访问");
+            specialOrderResponse.setOrderTotal(order.getPayment().doubleValue());
+            specialOrderResponse.setUserId(order.getUserId());
+            specialOrderResponse.setUserName(order.getBuyerNick());
+        }
         OrderShipping shipping = selectShippingInfoByOrderId(orderId);
-
-        SpecialOrderResponse specialOrderResponse = orderConverter.orderAndShipping2specialRes(order, shipping);
+        //SpecialOrderResponse specialOrderResponse = orderConverter.orderAndShipping2specialRes(order, shipping);
+        if (shipping != null) {
+            specialOrderResponse.setTel(shipping.getReceiverPhone());
+            specialOrderResponse.setStreetName(shipping.getReceiverAddress());
+        }
         List<OrderItemDto> goodsList = orderItemMapper.queryOrderItemDtoByOrderId(orderId);
         specialOrderResponse.setGoodsList(goodsList);
+        specialOrderResponse.setCode(OrderRetCode.SUCCESS.getCode());
+        specialOrderResponse.setMsg(OrderRetCode.SUCCESS.getMessage());
         return specialOrderResponse;
 
     }
@@ -137,7 +160,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
     private void deleteShippingByOrderId(String orderId) {
         Example example = new Example(OrderShipping.class);
-        example.createCriteria().andEqualTo(orderId);
+        example.createCriteria().andEqualTo("orderId", orderId);
         if (orderShippingMapper.deleteByExample(example) < 1)
             throw new BizException(OrderRetCode.DB_EXCEPTION.getCode(),
                     OrderRetCode.DB_EXCEPTION.getMessage());
@@ -145,7 +168,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
     private void deleteOrderItemByOrderId(String orderId) {
         Example example = new Example(OrderItem.class);
-        example.createCriteria().andEqualTo(orderId);
+        example.createCriteria().andEqualTo("orderId", orderId);
         if (orderMapper.deleteByExample(example) < 1) throw new BizException(OrderRetCode.DB_EXCEPTION.getCode(),
                 OrderRetCode.DB_EXCEPTION.getMessage());
 
@@ -153,30 +176,32 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
     private void deleteOrderByOrderId(String orderId) {
         Example example = new Example(Order.class);
-        example.createCriteria().andEqualTo(orderId);
+        example.createCriteria().andEqualTo("orderId", orderId);
         if (orderItemMapper.deleteByExample(example) < 1) throw new BizException(OrderRetCode.DB_EXCEPTION.getCode(),
                 OrderRetCode.DB_EXCEPTION.getMessage());
     }
 
     private OrderShipping selectShippingInfoByOrderId(String orderId) {
         Example example = new Example(OrderShipping.class);
-        example.createCriteria().andEqualTo(orderId);
+        example.createCriteria().andEqualTo("orderId", orderId);
         return orderShippingMapper.selectOneByExample(example);
     }
 
     private Order selectOrderByOrderId(String orderId) {
         Example example = new Example(Order.class);
-        Example.Criteria criteria = example.createCriteria().andEqualTo(orderId);
-        return orderMapper.selectOneByExample(example);
+        Example.Criteria criteria = example.createCriteria().andEqualTo("orderId", orderId);
+        List<Order> orders = orderMapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(orders))
+            throw new BizException(OrderRetCode.DB_EXCEPTION.getMessage(), OrderRetCode.DB_EXCEPTION.getCode());
+        return orders.get(0);
     }
 
     @Override
     public Boolean checkPayStatus(String orderId) {
         Example example = new Example(Order.class);
-        example.createCriteria().andEqualTo(orderId).andIsNotNull("paymentTime");
+        example.createCriteria().andEqualTo("orderId", orderId).andIsNotNull("paymentTime");
         return orderMapper.selectCountByExample(example) > 0;
     }
-
 
 
     @Override

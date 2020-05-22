@@ -13,9 +13,11 @@ import com.mall.pay.dto.QueryPayRequest;
 import com.mall.pay.dto.QueryPayResponse;
 import com.mall.user.intercepter.TokenIntercepter;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -25,26 +27,27 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Slf4j
 @RestController
-@RequestMapping("/payment")
+@RequestMapping("/cashier")
 @Api(tags = "PayController", description = "支付层")
 public class PayController {
 
     @Reference(timeout = 3000, check = false)
     PayService payService;
 
-    @PostMapping("/cashier")
+    @PostMapping("/pay")
+    @ApiOperation("提交支付")
     public ResponseData CreatePrePay(HttpServletRequest servletRequest, @RequestBody PayForm payForm) {
         String userInfo = (String) servletRequest.getAttribute(TokenIntercepter.USER_INFO_KEY);
         JSONObject object = JSON.parseObject(userInfo);
         Long uid = Long.parseLong(object.get("uid").toString());
         PrePayRequest request = PrePayRequest.builder()
-                .nickName(payForm.getNickName()).info(payForm.getInfo())
+                .nickName(payForm.getNickName()).info(payForm.getInfo()).payType(payForm.getPayType())
                 .orderId(payForm.getOrderId()).money(payForm.getMoney()).uid(uid)
                 .build();
         PrePayResponse response = payService.createPrePay(request);
         if (!response.getCode().equals(PayRetCode.SUCCESS.getCode()))
             return new ResponseUtil<>().setErrorMsg(response.getMsg());
-        return new ResponseUtil<>().setData(response.getQRCodeUrl(), PayRetCode.PAIED.getMessage());
+        return new ResponseUtil<>().setData(response.getQRCodeUrl());
     }
 
     @GetMapping("/queryStatus")

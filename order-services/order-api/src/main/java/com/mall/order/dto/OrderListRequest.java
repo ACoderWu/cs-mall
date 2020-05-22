@@ -5,15 +5,20 @@ package com.mall.order.dto;/**
 import com.mall.commons.result.AbstractRequest;
 import com.mall.commons.tool.exception.ValidateException;
 import com.mall.order.constant.OrderRetCode;
-import lombok.Data;
+import lombok.*;
 
 /**
- *  ciggar
+ * ciggar
  * create-date: 2019/7/30-上午10:02
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class OrderListRequest extends AbstractRequest{
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class OrderListRequest extends AbstractRequest {
 
+    private static final long serialVersionUID = 7809381933602072171L;
     private Long userId;
     private Integer page;
     private Integer size;
@@ -21,15 +26,14 @@ public class OrderListRequest extends AbstractRequest{
 
     @Override
     public void requestCheck() {
-        if(page == null || page < 1){
+        if (page == null || page < 1) {
             page = 1;
         }
-        if(size == null || size < 1){
+        if (size == null || size < 1) {
             size = 5;
         }
-        if(userId==null){
-            throw new ValidateException(OrderRetCode.REQUISITE_PARAMETER_NOT_EXIST.getCode(),OrderRetCode.REQUISITE_PARAMETER_NOT_EXIST.getMessage());
-
+        if (userId == null) {
+            throw new ValidateException(OrderRetCode.REQUISITE_PARAMETER_NOT_EXIST.getCode(), OrderRetCode.REQUISITE_PARAMETER_NOT_EXIST.getMessage());
         }
     }
 }

@@ -31,7 +31,6 @@ import java.util.UUID;
  **/
 @Service
 @Slf4j
-@Transactional
 public class RegisterServiceImpl implements IRegisterService {
 
     @Autowired
@@ -43,6 +42,7 @@ public class RegisterServiceImpl implements IRegisterService {
     @Autowired
     JavaMailSender mailSender;
 
+    @Transactional
     @Override
     public UserRegisterResponse register(UserRegisterRequest registerRequest) {
         UserRegisterResponse response = new UserRegisterResponse();
@@ -74,7 +74,7 @@ public class RegisterServiceImpl implements IRegisterService {
         //2. 向用户验证表中插入一条记录
         UserVerify userVerify = new UserVerify();
         userVerify.setUsername(member.getUsername());
-        String key = member.getUsername()+member.getPassword()+UUID.randomUUID().toString();
+        String key = member.getUsername() + member.getPassword() + UUID.randomUUID().toString();
         String uuid = DigestUtils.md5DigestAsHex(key.getBytes());
         userVerify.setUuid(uuid);
         userVerify.setRegisterDate(new Date());
@@ -89,10 +89,10 @@ public class RegisterServiceImpl implements IRegisterService {
 
         //3. 发送用户激活邮件
         //TODO 发送用户激活邮件 激活邮件应该是一个链接 有一个接口去处理我们的用户激活 消息中间件MQ
-        sendEmail(uuid,registerRequest);
+        sendEmail(uuid, registerRequest);
 
         //打印日志
-        log.info("用户注册成功，注册参数request:{},{}",JSON.toJSONString(registerRequest),"xxx");
+        log.info("用户注册成功，注册参数request:{},{}", JSON.toJSONString(registerRequest), "xxx");
         // 用户注册成功，注册参数request:registerRequest,xxx
         response.setCode(SysRetCodeConstants.SUCCESS.getCode());
         response.setMsg(SysRetCodeConstants.SUCCESS.getMessage());
@@ -101,6 +101,7 @@ public class RegisterServiceImpl implements IRegisterService {
 
     /**
      * 发送用户激活邮件
+     *
      * @param uuid
      * @param registerRequest
      */
@@ -123,11 +124,11 @@ public class RegisterServiceImpl implements IRegisterService {
     private void volidUserNameRepeat(UserRegisterRequest registerRequest) {
 
         Example example = new Example(Member.class);
-        example.createCriteria().andEqualTo("username",registerRequest.getUserName());
+        example.createCriteria().andEqualTo("username", registerRequest.getUserName());
         /** select * from tb_member where username = #{username} **/
         List<Member> memberList = memberMapper.selectByExample(example);
-        if (!CollectionUtils.isEmpty(memberList)){
-            throw new ValidateException(SysRetCodeConstants.USERNAME_ALREADY_EXISTS.getCode(),SysRetCodeConstants.USERNAME_ALREADY_EXISTS.getMessage());
+        if (!CollectionUtils.isEmpty(memberList)) {
+            throw new ValidateException(SysRetCodeConstants.USERNAME_ALREADY_EXISTS.getCode(), SysRetCodeConstants.USERNAME_ALREADY_EXISTS.getMessage());
         }
     }
 

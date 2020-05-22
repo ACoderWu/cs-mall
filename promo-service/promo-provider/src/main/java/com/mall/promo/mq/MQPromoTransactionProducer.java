@@ -5,6 +5,7 @@ import com.mall.order.dto.CreateSeckillOrderRequest;
 import com.mall.promo.cache.CacheManager;
 import com.mall.promo.constant.PromoRetCode;
 import com.mall.promo.converter.PromoOrderRequestConverter;
+import com.mall.promo.dal.entitys.PromoItem;
 import com.mall.promo.dal.persistence.PromoItemMapper;
 import com.mall.promo.dto.CreatePromoOrderRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import org.apache.rocketmq.common.message.MessageExt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
@@ -98,9 +100,16 @@ public class MQPromoTransactionProducer {
     public Boolean sendPromoOrderTransaction(CreatePromoOrderRequest request) {
         Message message = new Message();
         message.setTopic(topic);
-        CreateSeckillOrderRequest seckillOrderRequest = converter.toSecKillRequest(request);
-        message.setBody(JSON.toJSONString(seckillOrderRequest).getBytes(StandardCharsets.UTF_8));
         Map<String, Object> argMap = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
+        //CreateSeckillOrderRequest seckillOrderRequest = converter.toSecKillRequest(request);
+        Long productId = request.getProductId();
+        map.put("productId", productId);
+        Long psId = request.getPsId();
+        map.put("price", getPromoItem(psId, productId).getSeckillPrice());
+        map.put("userId", request.getUserId());
+        map.put("userName", request.getUserName());
+        message.setBody(JSON.toJSONString(map).getBytes(StandardCharsets.UTF_8));
         argMap.put("arg", request);
         TransactionSendResult sendResult = null;
         try {
@@ -109,5 +118,11 @@ public class MQPromoTransactionProducer {
             e.printStackTrace();
         }
         return sendResult != null && LocalTransactionState.COMMIT_MESSAGE.equals(sendResult.getLocalTransactionState());
+    }
+
+    private PromoItem getPromoItem(Long psId, Long productId) {
+        Example example = new Example(PromoItem.class);
+        example.createCriteria().andEqualTo("psId", psId).andEqualTo("itemId", productId);
+        return promoItemMapper.selectOneByExample(example);
     }
 }
