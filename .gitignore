@@ -1,3 +1,7 @@
 # Project exclude paths
+/promo-service/target/
 /promo-service/promo-api/target/
-/promo-service/promo-provider/target/
+/pay-services/target/
+/order-services/target/
+/pay-services/pay-api/target/
+/pay-services/pay-provider/target/

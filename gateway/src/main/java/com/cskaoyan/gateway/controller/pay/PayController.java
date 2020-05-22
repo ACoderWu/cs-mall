@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.cskaoyan.gateway.form.pay.PayForm;
 import com.mall.commons.result.ResponseData;
 import com.mall.commons.result.ResponseUtil;
+import com.mall.order.OrderQueryService;
+import com.mall.order.constant.OrderRetCode;
 import com.mall.pay.PayService;
 import com.mall.pay.constant.PayRetCode;
 import com.mall.pay.dto.PrePayRequest;
@@ -33,6 +35,8 @@ public class PayController {
 
     @Reference(timeout = 3000, check = false)
     PayService payService;
+    @Reference(timeout = 3000, check = false)
+    OrderQueryService orderQueryService;
 
     @PostMapping("/pay")
     @ApiOperation("提交支付")
@@ -61,6 +65,9 @@ public class PayController {
         QueryPayResponse response = payService.queryPayStatus(request);
         if (!response.getCode().equals(PayRetCode.SUCCESS.getCode()))
             return new ResponseUtil<>().setErrorMsg(response.getMsg());
-        return new ResponseUtil<>().setData(null);
+        //更新订单支付状态
+        if (orderQueryService.updatePayStatus(orderId) < 1)
+            return new ResponseUtil<>().setErrorMsg(OrderRetCode.DB_SAVE_EXCEPTION.getMessage());
+        return new ResponseUtil<>().setData(PayRetCode.PAIED.getMessage());
     }
 }

@@ -247,7 +247,7 @@ public class PayServiceImpl implements PayService {
                 log.info("查询返回该订单支付成功: )");
 
                 AlipayTradeQueryResponse response = result.getResponse();
-                queryPayResponse.setCode(PayRetCode.PAIED.getCode());
+                queryPayResponse.setCode(PayRetCode.SUCCESS.getCode());
                 queryPayResponse.setMsg(PayRetCode.PAIED.getMessage());
                 Date date = new Date();
                 payment.setCompleteTime(date);
@@ -255,6 +255,8 @@ public class PayServiceImpl implements PayService {
                 payment.setUpdateTime(date);
                 payment.setStatus("1");
                 if (updatePayStatus(payment) < 1) throw new BizException(PayRetCode.DB_SAVE_EXCEPTION.getMessage());
+                response.setCode(PayRetCode.SUCCESS.getCode());
+                response.setMsg(PayRetCode.PAIED.getMessage());
                 dumpResponse(response);
 
                 log.info(response.getTradeStatus());

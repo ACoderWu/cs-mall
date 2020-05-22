@@ -19,5 +19,5 @@ public interface OrderQueryService {
 
     Boolean checkPayStatus(String orderId);
 
-    int updatePayStatus(OrderDto order);
+    int updatePayStatus(String orderId);
 }

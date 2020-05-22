@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import tk.mybatis.mapper.entity.Example;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -203,10 +204,17 @@ public class OrderQueryServiceImpl implements OrderQueryService {
         return orderMapper.selectCountByExample(example) > 0;
     }
 
-
+    /**
+     * 更新订单支付状态
+     *
+     * @param orderId
+     * @return
+     */
     @Override
-    public int updatePayStatus(OrderDto order) {
-        return 0;
+    public int updatePayStatus(String orderId) {
+        Date date = new Date();
+        Order order = Order.builder().orderId(orderId).paymentTime(date).status(1).updateTime(date).build();
+        return orderMapper.updateByPrimaryKeySelective(order);
     }
 }
 
