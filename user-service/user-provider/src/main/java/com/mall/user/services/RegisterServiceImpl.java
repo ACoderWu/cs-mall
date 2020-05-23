@@ -89,7 +89,7 @@ public class RegisterServiceImpl implements IRegisterService {
 
         ////3. 发送用户激活邮件
         ////TODO 发送用户激活邮件 激活邮件应该是一个链接 有一个接口去处理我们的用户激活 消息中间件MQ
-        //sendEmail(uuid, registerRequest);
+        sendEmail(uuid, registerRequest);
 
         //打印日志
         log.info("用户注册成功，注册参数request:{},{}", JSON.toJSONString(registerRequest), "xxx");

@@ -52,7 +52,11 @@ public class LoginServiceImpl implements ILoginService {
         Member member = memberList.get(0);
 
         // TODO 判断用户否已经激活
-
+        if(member.getIsVerified().equals("N")){
+            response.setCode(SysRetCodeConstants.USER_ISVERFIED_ERROR.getCode());
+            response.setMsg(SysRetCodeConstants.USER_ISVERFIED_ERROR.getMessage());
+            return response;
+        }
 
 
         String password = request.getPassword();
