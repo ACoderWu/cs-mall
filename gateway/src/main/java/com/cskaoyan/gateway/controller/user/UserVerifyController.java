@@ -4,6 +4,7 @@ package com.cskaoyan.gateway.controller.user;
 import com.mall.commons.result.ResponseData;
 import com.mall.commons.result.ResponseUtil;
 import com.mall.user.IUserVerifyService;
+import com.mall.user.annotation.Anoymous;
 import com.mall.user.constants.SysRetCodeConstants;
 import com.mall.user.dto.UserVerifyRequest;
 import com.mall.user.dto.UserVerifyResponse;
@@ -25,6 +26,7 @@ public class UserVerifyController {
     private IUserVerifyService iUserVerifyService;
 
     @GetMapping("/verify")
+    @Anoymous
     public ResponseData verify(@RequestParam String uid, @RequestParam String username, HttpServletRequest request, HttpServletResponse response){
         //验证
         if(StringUtils.isEmpty(uid) || StringUtils.isEmpty(username)){
