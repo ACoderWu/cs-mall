@@ -22,14 +22,14 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/user")
 public class UserVerifyController {
 
-    @Reference(check = false)
+    @Reference(check = false,timeout = 3000)
     private IUserVerifyService iUserVerifyService;
 
-    @GetMapping("/verify")
     @Anoymous
-    public ResponseData verify(@RequestParam String uid, @RequestParam String username, HttpServletRequest request, HttpServletResponse response){
+    @GetMapping("/verify")
+    public ResponseData verify(@RequestParam String uid, @RequestParam String username, HttpServletRequest request, HttpServletResponse response) {
         //验证
-        if(StringUtils.isEmpty(uid) || StringUtils.isEmpty(username)){
+        if (StringUtils.isEmpty(uid) || StringUtils.isEmpty(username)) {
             return new ResponseUtil<>().setErrorMsg("注册用户序号/用户名不能为空");
         }
 
@@ -38,7 +38,7 @@ public class UserVerifyController {
         userVerifyRequest.setUuid(uid);
         UserVerifyResponse userVerifyResponse = iUserVerifyService.verify(userVerifyRequest);
 
-        if(userVerifyResponse.getCode().equals(SysRetCodeConstants.SUCCESS.getCode())){
+        if (userVerifyResponse.getCode().equals(SysRetCodeConstants.SUCCESS.getCode())) {
             return new ResponseUtil<>().setData(null);
         }
         return new ResponseUtil<>().setErrorMsg(userVerifyResponse.getMsg());

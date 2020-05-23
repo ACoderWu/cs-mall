@@ -43,7 +43,7 @@ public class RegisterServiceImpl implements IRegisterService {
     @Autowired
     JavaMailSender mailSender;
     //TODO:要想这里生效，先要去配mail的相关
-    @Value("${spring.mall.username}")
+    @Value("${mymail.email}")
     String emailName;
 
     @Transactional
