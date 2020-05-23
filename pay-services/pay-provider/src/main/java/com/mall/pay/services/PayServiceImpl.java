@@ -33,6 +33,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import tk.mybatis.mapper.entity.Example;
 
@@ -79,6 +80,11 @@ public class PayServiceImpl implements PayService {
 
     @Autowired
     PaymentMapper paymentMapper;
+    @Value("${pay.image.addr.prefix}")
+    String prefix;
+    @Value("${pay.image.host.prefix}")
+    String hostPrefix;
+
 
     /**
      * 预付款码生成并返回
@@ -99,13 +105,13 @@ public class PayServiceImpl implements PayService {
                 return response;
             }
             response.setCode(PayRetCode.SUCCESS.getCode());
-            response.setQRCodeUrl("http://localhost:8080/image/" + qrcodeName);
+            response.setQRCodeUrl(hostPrefix + qrcodeName);
             return response;
         }
-        if("wechat_pay".equals(request.getPayType())){
+        if ("wechat_pay".equals(request.getPayType())) {
             qrcodeName = "qr-20200522163852.png";
             response.setCode(PayRetCode.SUCCESS.getCode());
-            response.setQRCodeUrl("http://localhost:8080/image/" + qrcodeName);
+            response.setQRCodeUrl(hostPrefix + qrcodeName);
             return response;
         }
 
@@ -176,7 +182,7 @@ public class PayServiceImpl implements PayService {
                 dumpResponse(response);
 
                 // 需要修改为运行机器上的路径
-                String prefix = "C:/Users/QING/Image/QRCODE/";
+
                 qrcodeName = String.format("qr-%s.png",
                         response.getOutTradeNo());
                 String filePath = prefix + qrcodeName;

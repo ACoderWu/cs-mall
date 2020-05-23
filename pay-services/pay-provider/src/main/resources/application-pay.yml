@@ -1,0 +1,9 @@
+pay:
+  image:
+    addr:
+      prefix: C:/Users/QING/Image/QRCODE/
+    host:
+      prefix: http://localhost:8080/image/
+
+
+
