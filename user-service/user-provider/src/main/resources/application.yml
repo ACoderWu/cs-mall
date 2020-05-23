@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: dev,mail
 mybatis:
   mapper-locations: classpath*:com/mall/user/dal/persistence/*Mapper.xml"
   type-aliases-package: com.mall.user.dal.entitys

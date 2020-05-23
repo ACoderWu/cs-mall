@@ -13,6 +13,7 @@ import com.mall.user.dto.UserRegisterResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +42,9 @@ public class RegisterServiceImpl implements IRegisterService {
 
     @Autowired
     JavaMailSender mailSender;
+    //TODO:要想这里生效，先要去配mail的相关
+    @Value("${spring.mall.username}")
+    String emailName;
 
     @Transactional
     @Override
@@ -108,8 +112,8 @@ public class RegisterServiceImpl implements IRegisterService {
     private void sendEmail(String uuid, UserRegisterRequest registerRequest) {
         SimpleMailMessage message = new SimpleMailMessage();
 
-        message.setSubject("CSMALL用户激活");
-        message.setFrom("yjswc1076@163.com");
+        message.setSubject("MALL用户激活");
+        message.setFrom(emailName);
         message.setTo(registerRequest.getEmail());
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("http://localhost:8080/user/verify?uid=").append(uuid).append("&username=").append(registerRequest.getUserName());
