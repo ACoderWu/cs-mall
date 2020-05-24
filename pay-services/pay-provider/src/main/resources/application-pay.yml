@@ -1,6 +1,7 @@
 pay:
   image:
     addr:
+#      这里需要更为为你存放的路径
       prefix: C:/Users/QING/Image/QRCODE/
     host:
       prefix: http://localhost:8080/image/

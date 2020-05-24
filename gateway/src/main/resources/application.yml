@@ -7,6 +7,7 @@ spring:
   mvc:
     static-path-pattern: /image/**
   resources:
+#    这里同支付二维码存放位置
     static-locations: file:C:/Users/QING/Image/QRCODE/
   redisson:
     address: 127.0.0.1:6379
