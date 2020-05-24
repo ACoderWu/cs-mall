@@ -19,7 +19,8 @@ public class TradeNoUtils {
         String date = new SimpleDateFormat("yyyyMMdd").format(now);
         String seconds = new SimpleDateFormat("HHmmss").format(now);
         String millSeconds=new SimpleDateFormat("SSS").format(now);
-        return date + "00001000" + getTwo() + "00" + seconds + getTwo()+millSeconds;
+        //return date + "00001000" + getTwo() + "00" + seconds + getTwo()+millSeconds;
+        return date + seconds + millSeconds;
 
     }
 
