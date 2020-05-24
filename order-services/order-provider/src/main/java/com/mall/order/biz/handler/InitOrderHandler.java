@@ -50,14 +50,14 @@ public class InitOrderHandler extends AbstractTransHandler {
         String orderId = UUID.randomUUID().toString();
         order.setOrderId(orderId);
         order.setUserId(createOrderContext.getUserId());
-        order.setBuyerNick(createOrderContext.getBuyerNickName());
+        order.setBuyerNick(createOrderContext.getUserName());
         order.setPayment(createOrderContext.getOrderTotal());
         order.setCreateTime(new Date());
         order.setUpdateTime(new Date());
         order.setStatus(OrderConstants.ORDER_STATUS_INIT);
         orderMapper.insert(order);
-        List<Long> productIds = createOrderContext.getBuyProductIds();
-        if(CollectionUtils.isEmpty(productIds)) productIds = new ArrayList<>();
+
+        List<Long> productIds = new ArrayList<>();
         //插入order关联表
         List<CartProductDto> dtoList = createOrderContext.getCartProductDtoList();
         if (dtoList != null) {
@@ -90,7 +90,8 @@ public class InitOrderHandler extends AbstractTransHandler {
         }
         createOrderContext.setOrderId(orderId);
         //FIXME:也许可以在更新库存时更新次操作
-        createOrderContext.setBuyProductIds(productIds);
+        if (CollectionUtils.isEmpty(createOrderContext.getBuyProductIds()))
+            createOrderContext.setBuyProductIds(productIds);
         return true;
     }
 }

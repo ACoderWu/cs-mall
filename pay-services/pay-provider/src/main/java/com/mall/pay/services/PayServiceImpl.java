@@ -267,6 +267,7 @@ public class PayServiceImpl implements PayService {
                 payment.setPaySuccessTime(date);
                 payment.setUpdateTime(date);
                 payment.setStatus("1");
+                payment.setRemark("支付宝支付");
                 if (updatePayStatus(payment) < 1) throw new BizException(PayRetCode.DB_SAVE_EXCEPTION.getMessage());
                 response.setCode(PayRetCode.SUCCESS.getCode());
                 response.setMsg(PayRetCode.PAIED.getMessage());

@@ -4,11 +4,12 @@ package com.mall.shopping.converter;
 import com.mall.shopping.dal.entitys.Item;
 import com.mall.shopping.dto.CartProductDto;
 import com.mall.shopping.dto.CartProductDto;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by ciggar on 2019/7/23.
  */
-
+@Component
 public class CartItemConverter {
 
 

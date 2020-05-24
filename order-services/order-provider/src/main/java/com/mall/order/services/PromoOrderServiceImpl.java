@@ -31,6 +31,7 @@ public class PromoOrderServiceImpl implements PromoOrderService {
     public CreateSeckillOrderResponse createPromoOrder(CreateSeckillOrderRequest request) {
         CreateSeckillOrderResponse response = new CreateSeckillOrderResponse();
         CreateOrderContext orderContext = promoOrderConverter.toCreateOrderContext(request);
+
         if (handler.handle(orderContext)) {
             response.setCode(OrderRetCode.SUCCESS.getCode());
             return response;

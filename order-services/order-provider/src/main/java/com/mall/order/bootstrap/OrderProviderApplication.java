@@ -6,7 +6,7 @@ import org.springframework.context.annotation.ComponentScan;
 import tk.mybatis.spring.annotation.MapperScan;
 
 @ComponentScan(basePackages ={"com.mall.order","com.mall.commons.mq"})
-@MapperScan(basePackages = "com.mall.order.dal")
+@MapperScan(basePackages = {"com.mall.order.dal","com.mall.shopping"})
 @SpringBootApplication
 public class OrderProviderApplication {
 

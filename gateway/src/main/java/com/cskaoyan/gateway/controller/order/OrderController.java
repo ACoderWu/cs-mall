@@ -66,7 +66,7 @@ public class OrderController {
 
     @GetMapping("/order/{id}")
     @ApiOperation("获取当前用户的特定编号订单信息")
-    public ResponseData getOrder(@PathVariable("id") Long orderId, HttpServletRequest servletRequest) {
+    public ResponseData getOrder(@PathVariable("id") String orderId, HttpServletRequest servletRequest) {
         String userInfo = (String) servletRequest.getAttribute(TokenIntercepter.USER_INFO_KEY);
         JSONObject object = JSON.parseObject(userInfo);
         Long uid = Long.parseLong(object.get("uid").toString());
@@ -93,11 +93,11 @@ public class OrderController {
 
     @DeleteMapping("/order/{id}")
     @ApiOperation("删除订单")
-    public ResponseData deleteOrder(@PathVariable("id") Long orderId, HttpServletRequest servletRequest) {
+    public ResponseData deleteOrder(@PathVariable("id") String orderId, HttpServletRequest servletRequest) {
         String userInfo = (String) servletRequest.getAttribute(TokenIntercepter.USER_INFO_KEY);
         JSONObject object = JSON.parseObject(userInfo);
         Long uid = Long.parseLong(object.get("uid").toString());
-        DeleteOrderRequest request = new DeleteOrderRequest(orderId.toString(), uid);
+        DeleteOrderRequest request = new DeleteOrderRequest(orderId, uid);
         DeleteOrderResponse response = orderQueryService.deleteOrder(request);
         if (!response.getCode().equals(OrderRetCode.SUCCESS.getCode()))
             return new ResponseUtil<>().setErrorMsg(response.getMsg());

@@ -17,7 +17,7 @@ public class OrderProviderApplicationTests {
 
     @Test
     public void contextLoads() {
-        SpecialOrderResponse specialOrderResponse = orderQueryService.queryOrder(new SpecialOrderRequest(71L, 20050402540122568L));
+        SpecialOrderResponse specialOrderResponse = orderQueryService.queryOrder(new SpecialOrderRequest(71L, "20050402540122568"));
         System.out.println(specialOrderResponse);
     }
 

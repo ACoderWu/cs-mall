@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 @Data
 public class CartProductDto implements Serializable{
 
+    private static final long serialVersionUID = -5549567558657402236L;
     private Long productId;
 
     private BigDecimal salePrice;

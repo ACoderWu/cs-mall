@@ -81,7 +81,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     public SpecialOrderResponse queryOrder(SpecialOrderRequest request) {
         request.requestCheck();
         SpecialOrderResponse specialOrderResponse = new SpecialOrderResponse();
-        String orderId = request.getOrderId().toString();
+        String orderId = request.getOrderId();
         Order order = selectOrderByOrderId(orderId);
         if (order != null) {
             //非法访问
@@ -107,14 +107,25 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
     @Override
     public CancelOrderResponse cancelOrder(CancelOrderRequest request) {
+        request.requestCheck();
+        CancelOrderResponse cancelOrderResponse = new CancelOrderResponse();
         String orderId = request.getOrderId();
         Long userId = request.getUserId();
-        validateToken(orderId, userId);
-        updateStock(orderItemMapper.queryOrderItemDtoByOrderId(orderId));
-        deleteOrderByOrderId(orderId);
-        deleteOrderItemByOrderId(orderId);
-        deleteShippingByOrderId(orderId);
-        return new CancelOrderResponse("成功");
+        try {
+            validateToken(orderId, userId);
+            updateStock(orderItemMapper.queryOrderItemDtoByOrderId(orderId));
+            deleteOrderByOrderId(orderId);
+            deleteOrderItemByOrderId(orderId);
+            deleteShippingByOrderId(orderId);
+        } catch (BizException e) {
+            cancelOrderResponse.setCode(e.getErrorCode());
+            cancelOrderResponse.setMsg(e.getMessage());
+            return cancelOrderResponse;
+        }
+        cancelOrderResponse.setCode(OrderRetCode.SUCCESS.getCode());
+        cancelOrderResponse.setMsg(OrderRetCode.SUCCESS.getMessage());
+        cancelOrderResponse.setResult(OrderRetCode.SUCCESS.getMessage());
+        return cancelOrderResponse;
 
     }
 
@@ -143,20 +154,30 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     private Boolean validateToken(String orderId, Long userId) {
         Example example = new Example(Order.class);
         example.createCriteria().andEqualTo("orderId", orderId).andEqualTo("userId", userId);
-        if (orderMapper.selectCountByExample(example) < 1) throw new BizException("非法访问");
+        if (orderMapper.selectCountByExample(example) < 1)
+            throw new BizException(OrderRetCode.SYSTEM_ERROR.getCode(), "非法访问");
         return true;
     }
 
     @Override
     public DeleteOrderResponse deleteOrder(DeleteOrderRequest request) {
-
+        DeleteOrderResponse response = new DeleteOrderResponse();
         String orderId = request.getOrderId();
         Long userId = request.getUserId();
-        validateToken(orderId, userId);
-        deleteOrderByOrderId(orderId);
-        deleteOrderItemByOrderId(orderId);
-        deleteShippingByOrderId(orderId);
-        return new DeleteOrderResponse("成功");
+        try {
+            validateToken(orderId, userId);
+            deleteOrderByOrderId(orderId);
+            deleteOrderItemByOrderId(orderId);
+            deleteShippingByOrderId(orderId);
+        } catch (BizException e) {
+            response.setCode(e.getErrorCode());
+            response.setMsg(e.getMessage());
+            return response;
+        }
+        response.setCode(OrderRetCode.SUCCESS.getCode());
+        response.setMsg(OrderRetCode.SUCCESS.getMessage());
+        response.setResult(OrderRetCode.SUCCESS.getMessage());
+        return response;
     }
 
     private void deleteShippingByOrderId(String orderId) {
