@@ -43,5 +43,4 @@ public class UserVerifyController {
         }
         return new ResponseUtil<>().setErrorMsg(userVerifyResponse.getMsg());
     }
-
 }

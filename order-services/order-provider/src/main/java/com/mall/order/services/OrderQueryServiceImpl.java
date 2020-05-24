@@ -20,6 +20,7 @@ import org.apache.dubbo.common.utils.StringUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.sql.SQLException;
@@ -160,6 +161,7 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     }
 
     @Override
+    @Transactional
     public DeleteOrderResponse deleteOrder(DeleteOrderRequest request) {
         DeleteOrderResponse response = new DeleteOrderResponse();
         String orderId = request.getOrderId();
@@ -181,11 +183,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     }
 
     private void deleteShippingByOrderId(String orderId) {
+        //FIXME：暂时取消对物流信息删除而抛异常
         Example example = new Example(OrderShipping.class);
         example.createCriteria().andEqualTo("orderId", orderId);
-        if (orderShippingMapper.deleteByExample(example) < 1)
-            throw new BizException(OrderRetCode.DB_EXCEPTION.getCode(),
-                    OrderRetCode.DB_EXCEPTION.getMessage());
+        orderShippingMapper.deleteByExample(example);
     }
 
     private void deleteOrderItemByOrderId(String orderId) {
