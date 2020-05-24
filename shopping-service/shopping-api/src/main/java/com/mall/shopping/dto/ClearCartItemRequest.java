@@ -6,7 +6,7 @@ import com.mall.commons.result.AbstractRequest;
 import com.mall.commons.tool.exception.ValidateException;
 import com.mall.shopping.constants.ShoppingRetCode;
 import com.mall.shopping.constants.ShoppingRetCode;
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
@@ -14,7 +14,11 @@ import java.util.List;
  *  ciggar
  * create-date: 2019/8/1-下午10:47
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ClearCartItemRequest extends AbstractRequest{
 
     private Long userId;

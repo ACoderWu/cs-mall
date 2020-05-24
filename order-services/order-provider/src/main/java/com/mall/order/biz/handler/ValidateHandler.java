@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ValidateHandler extends AbstractTransHandler {
 
-    @Reference(check = false)
+    @Reference(timeout = 3000, check = false)
     private IMemberService memberService;
 
     /**

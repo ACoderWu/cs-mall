@@ -183,12 +183,4 @@ public class PromoServiceImpl implements PromoService {
         return promoSessions.stream().map(PromoSession::getId).collect(Collectors.toList());
     }
 
-    public CreateSeckillOrderRequest toSecKillOrderRequest(CreatePromoOrderRequest request) {
-        CreateSeckillOrderRequest seckillOrderRequest = new CreateSeckillOrderRequest();
-        seckillOrderRequest.setUserId(request.getUserId());
-        seckillOrderRequest.setUsername(request.getUserName());
-        seckillOrderRequest.setProductId(request.getProductId());
-        seckillOrderRequest.setPrice(getPromoItem(request).getSeckillPrice());
-        return seckillOrderRequest;
-    }
 }

@@ -1,7 +1,6 @@
 package com.mall.shopping;
 
 import com.mall.shopping.dto.*;
-import com.mall.shopping.dto.*;
 
 /**
  *  ciggar

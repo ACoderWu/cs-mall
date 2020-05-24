@@ -4,6 +4,7 @@ import com.mall.commons.result.AbstractRequest;
 import com.mall.commons.tool.exception.ValidateException;
 import com.mall.order.constant.OrderRetCode;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
  * @Email: xuejia@cskaoyan.onaliyun.com
  * @Description
  **/
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class CreateSeckillOrderRequest extends AbstractRequest {
     private static final long serialVersionUID = -4062543967890940083L;

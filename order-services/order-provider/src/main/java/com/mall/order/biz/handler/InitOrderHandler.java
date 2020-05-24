@@ -55,34 +55,36 @@ public class InitOrderHandler extends AbstractTransHandler {
         order.setUpdateTime(new Date());
         order.setStatus(OrderConstants.ORDER_STATUS_INIT);
         orderMapper.insert(order);
-        ArrayList<Long> productIds = new ArrayList<>();
+        List<Long> productIds = createOrderContext.getBuyProductIds();
         //插入order关联表
         List<CartProductDto> dtoList = createOrderContext.getCartProductDtoList();
-        for (CartProductDto dto : dtoList) {
+        if (dtoList != null) {
+            for (CartProductDto dto : dtoList) {
 
-            OrderItem orderItem = new OrderItem();
-            String orderItemId = UUID.randomUUID().toString();
-            orderItem.setId(orderItemId);
-            Long productId = dto.getProductId();
-            //收集productId更新createOrderContext
-            productIds.add(productId);
-            orderItem.setItemId(productId);
-            orderItem.setOrderId(orderId);
-            //商品限购处理
-            Long num = dto.getProductNum();
-            Long limitNum = dto.getLimitNum();
-            if (limitNum != null) {
-                num = limitNum < num ? limitNum : num;
+                OrderItem orderItem = new OrderItem();
+                String orderItemId = UUID.randomUUID().toString();
+                orderItem.setId(orderItemId);
+                Long productId = dto.getProductId();
+                //收集productId更新createOrderContext
+                productIds.add(productId);
+                orderItem.setItemId(productId);
+                orderItem.setOrderId(orderId);
+                //商品限购处理
+                Long num = dto.getProductNum();
+                Long limitNum = dto.getLimitNum();
+                if (limitNum != null) {
+                    num = limitNum < num ? limitNum : num;
+                }
+                orderItem.setNum(num.intValue());
+                double price = dto.getSalePrice().doubleValue();
+                orderItem.setPrice(price);
+                orderItem.setPicPath(dto.getProductImg());
+                orderItem.setTotalFee(price * num);
+                orderItem.setTitle(dto.getProductName());
+                orderItem.setStatus(1);
+                int code = orderItemMapper.insert(orderItem);
+                if (code < 1) throw new BizException(OrderRetCode.DB_EXCEPTION.getCode());
             }
-            orderItem.setNum(num.intValue());
-            double price = dto.getSalePrice().doubleValue();
-            orderItem.setPrice(price);
-            orderItem.setPicPath(dto.getProductImg());
-            orderItem.setTotalFee(price * num);
-            orderItem.setTitle(dto.getProductName());
-            orderItem.setStatus(1);
-            int code = orderItemMapper.insert(orderItem);
-            if (code < 1) throw new BizException(OrderRetCode.DB_EXCEPTION.getCode());
         }
         createOrderContext.setOrderId(orderId);
         //FIXME:也许可以在更新库存时更新次操作

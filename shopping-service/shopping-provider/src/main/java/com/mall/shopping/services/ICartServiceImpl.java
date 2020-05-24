@@ -1,6 +1,7 @@
 package com.mall.shopping.services;
 
 import com.mall.shopping.ICartService;
+import com.mall.shopping.constants.ShoppingRetCode;
 import com.mall.shopping.dal.entitys.Item;
 import com.mall.shopping.dal.persistence.ItemMapper;
 import com.mall.shopping.dto.*;
@@ -34,7 +35,6 @@ public class ICartServiceImpl implements ICartService {
      * 获得购物车商品列表
      *
      * @param request
-     *
      * @return
      */
     @Override
@@ -59,7 +59,6 @@ public class ICartServiceImpl implements ICartService {
      * 添加商品到购物车
      *
      * @param request
-     *
      * @return
      */
     @Override
@@ -67,8 +66,8 @@ public class ICartServiceImpl implements ICartService {
 
         // 查询商品详情
         Item item = new Item();
-        item.setId(request.getItemId());
-        itemMapper.selectByPrimaryKey(item);
+        item.setId(request.getProductId());
+        item = itemMapper.selectByPrimaryKey(item);
 
         //item 信息转换为 CartProductDto 信息
         CartProductDto cartProductDto = new CartProductDto();
@@ -77,8 +76,8 @@ public class ICartServiceImpl implements ICartService {
         cartProductDto.setLimitNum(Long.valueOf(item.getLimitNum()));
         cartProductDto.setProductName(item.getTitle());
         cartProductDto.setSalePrice(item.getPrice());
-        cartProductDto.setProductImg(item.getImage());
-        cartProductDto.setProductNum(Long.valueOf(request.getNum()));
+        cartProductDto.setProductImg(item.getImageBig());
+        cartProductDto.setProductNum(Long.valueOf(request.getProductNum()));
 
         // 从 Redis 获取 当前用户的购物车，若没有购物车则新建
         RList<CartProductDto> cartProductDtoList = getCartRedisList(request.getUserId());
@@ -88,7 +87,22 @@ public class ICartServiceImpl implements ICartService {
             bucket.set(new ArrayList<>());
             cartProductDtoList = redissonClient.getList(cartUserId);
         }
-        cartProductDtoList.add(cartProductDto);
+
+        // 添加商品到购物车
+        boolean hasAdd = false;
+        for (int index = 0; index < cartProductDtoList.size(); index++) {
+            CartProductDto dto = cartProductDtoList.get(index);
+            if (dto.getProductId().equals(cartProductDto.getProductId())) {
+                Long lastProductNum = dto.getProductNum();
+                dto.setProductNum(lastProductNum + cartProductDto.getProductNum());
+                cartProductDtoList.set(index, dto);
+                hasAdd = true;
+                break;
+            }
+        }
+        if (!hasAdd) {
+            cartProductDtoList.add(cartProductDto);
+        }
 
         return null;
     }
@@ -97,16 +111,17 @@ public class ICartServiceImpl implements ICartService {
      * 更新购物车中商品的数量和状态
      *
      * @param request
-     *
      * @return
      */
     @Override
     public UpdateCartNumResponse updateCartNum(UpdateCartNumRequest request) {
         RList<CartProductDto> cartProductDtoList = getCartRedisList(request.getUserId());
-        for(CartProductDto cartProductDto : cartProductDtoList) {
-            if (request.getItemId().equals(cartProductDto.getProductId())) {
-                cartProductDto.setProductNum(Long.valueOf(request.getNum()));
-                cartProductDto.setChecked(request.getChecked());
+        for (int index = 0; index < cartProductDtoList.size(); index++) {
+            CartProductDto dto = cartProductDtoList.get(index);
+            if (request.getProductId().equals(dto.getProductId())) {
+                dto.setProductNum(request.getProductNum());
+                dto.setChecked(request.getChecked());
+                cartProductDtoList.set(index, dto);
             }
         }
         return null;
@@ -116,14 +131,15 @@ public class ICartServiceImpl implements ICartService {
      * 选择购物车中的所有商品
      *
      * @param request
-     *
      * @return
      */
     @Override
     public CheckAllItemResponse checkAllCartItem(CheckAllItemRequest request) {
         RList<CartProductDto> cartProductDtoList = getCartRedisList(request.getUserId());
-        for (CartProductDto cartProductDto : cartProductDtoList) {
-            cartProductDto.setChecked(request.getChecked());
+        for (int index = 0; index < cartProductDtoList.size(); index++) {
+            CartProductDto dto = cartProductDtoList.get(index);
+            dto.setChecked(request.getChecked());
+            cartProductDtoList.set(index, dto);
         }
         return null;
     }
@@ -132,7 +148,6 @@ public class ICartServiceImpl implements ICartService {
      * 删除购物车中的商品
      *
      * @param request
-     *
      * @return
      */
     @Override
@@ -140,7 +155,7 @@ public class ICartServiceImpl implements ICartService {
         RList<CartProductDto> cartProductDtoList = getCartRedisList(request.getUserId());
         if (request.getItemId() != null) {
             for (CartProductDto cartProductDto : cartProductDtoList) {
-                if (cartProductDto.getProductNum().equals(request.getItemId())) {
+                if (cartProductDto.getProductId().equals(request.getItemId())) {
                     cartProductDtoList.remove(cartProductDto);
                 }
             }
@@ -154,17 +169,12 @@ public class ICartServiceImpl implements ICartService {
      * 删除选中的商品
      *
      * @param request
-     *
      * @return
      */
     @Override
     public DeleteCheckedItemResposne deleteCheckedItem(DeleteCheckedItemRequest request) {
         RList<CartProductDto> cartProductDtoList = getCartRedisList(request.getUserId());
-        for (CartProductDto cartProduct : cartProductDtoList) {
-            if ("true".equals(cartProduct.getChecked())) {
-                cartProductDtoList.remove(cartProduct);
-            }
-        }
+        cartProductDtoList.removeIf(cartProduct -> "true".equals(cartProduct.getChecked()));
         return null;
     }
 
@@ -172,11 +182,11 @@ public class ICartServiceImpl implements ICartService {
      * 清空指定用户的购物车缓存(用户下完订单之后清理）
      *
      * @param request
-     *
      * @return
      */
     @Override
     public ClearCartItemResponse clearCartItemByUserID(ClearCartItemRequest request) {
+        ClearCartItemResponse response = new ClearCartItemResponse();
         List<Long> productIds = request.getProductIds();
         RList<CartProductDto> cartProductDtoList = getCartRedisList(request.getUserId());
         for (CartProductDto cartProductDto : cartProductDtoList) {
@@ -188,11 +198,14 @@ public class ICartServiceImpl implements ICartService {
                 }
             }
         }
-        return null;
+        response.setCode(ShoppingRetCode.SUCCESS.getCode());
+        response.setMsg(ShoppingRetCode.SUCCESS.getMessage());
+        return response;
     }
 
     /**
      * 获取购物车List
+     *
      * @param userId 传入用户id
      * @return
      */

@@ -48,9 +48,10 @@ public class PromoController {
         executorService = Executors.newFixedThreadPool(100);
 
     }
+
     @Anoymous
-    @GetMapping("seckilllist")
-    public ResponseData getPromoList(@RequestParam Integer sessionId) {
+    @GetMapping("/seckilllist")
+    public ResponseData getPromoList(Integer sessionId) {
         String yyyyMMdd = toYYYYMMdd(new Date());
         PromoInfoRequest request = new PromoInfoRequest(sessionId, yyyyMMdd);
         PromoInfoResponse response = promoService.queryPromoInfo(request);
@@ -59,16 +60,16 @@ public class PromoController {
         return new ResponseUtil<>().setData(response);
     }
 
-    @PostMapping("seckill")
+    @PostMapping("/seckill")
     public ResponseData secKill(HttpServletRequest servletRequest, @RequestBody CreatePromoOrderInfo info) {
 
         String userInfo = (String) servletRequest.getAttribute(TokenIntercepter.USER_INFO_KEY);
         JSONObject object = JSON.parseObject(userInfo);
         Long uid = Long.parseLong(object.get("uid").toString());
-        String userName = (String) object.get("userName");
+        String userName = (String) object.get("username");
         Long productId = info.getProductId();
         Long psId = info.getPsId();
-        if (!checkInventory(psId, productId))
+        if (checkInventory(psId, productId))
             return new ResponseUtil<>().setErrorMsg(PromoRetCode.STOCK_NO_ENOUGH.getMessage());
         //令牌限流
         rateLimiter.acquire();
@@ -85,8 +86,9 @@ public class PromoController {
             response = responseFuture.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+            return new ResponseUtil<>().setErrorMsg(response.getMsg());
         }
-        if (!response.getCode().equals(SysRetCodeConstants.SUCCESS.getCode()))
+        if (!SysRetCodeConstants.SUCCESS.getCode().equals(response.getCode()))
             return new ResponseUtil<>().setErrorMsg(response.getMsg());
         return new ResponseUtil<>().setData(response);
     }

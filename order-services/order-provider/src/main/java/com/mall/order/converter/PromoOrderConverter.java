@@ -26,6 +26,7 @@ public class PromoOrderConverter {
         orderContext.setBuyProductIds(productIds);
         orderContext.setUserId(request.getUserId());
         orderContext.setUserName(request.getUsername());
+        orderContext.setBuyerNickName(request.getUsername());
         orderContext.setOrderTotal(request.getPrice());
         return orderContext;
     }

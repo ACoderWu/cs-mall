@@ -48,7 +48,7 @@ public class MQPromoTransactionProducer {
 
     @PostConstruct
     public void init() {
-        transactionMQProducer = new TransactionMQProducer("promo_group");
+        transactionMQProducer = new TransactionMQProducer("promo_order_group");
         transactionMQProducer.setNamesrvAddr(addr);
         try {
             transactionMQProducer.start();
@@ -68,9 +68,10 @@ public class MQPromoTransactionProducer {
             public LocalTransactionState executeLocalTransaction(Message message, Object o) {
                 //FIXME:此处还需要统一CreatePromoOrderRequest和CreateSeckillOrderRequest
                 HashMap argMap = (HashMap<String, Object>) o;
-                CreatePromoOrderRequest request = (CreatePromoOrderRequest) argMap.get("arg");
+                Long productId = (Long) argMap.get("productId");
+                Long psId = (Long) argMap.get("psId");
                 String key = "promo_order" + message.getTransactionId();
-                if (promoItemMapper.updateStock(request.getProductId(), request.getPsId(), 1) < 1) {
+                if (promoItemMapper.updateStock(productId, psId, 1) < 1) {
                     cacheManager.setCache(key, PromoRetCode.SYSTEM_ERROR.getCode(), 1);
                     return LocalTransactionState.ROLLBACK_MESSAGE;
                 }
@@ -100,17 +101,19 @@ public class MQPromoTransactionProducer {
     public Boolean sendPromoOrderTransaction(CreatePromoOrderRequest request) {
         Message message = new Message();
         message.setTopic(topic);
-        Map<String, Object> argMap = new HashMap<>();
         Map<String, Object> map = new HashMap<>();
+        HashMap<String, Object> argMap = new HashMap<>();
         //CreateSeckillOrderRequest seckillOrderRequest = converter.toSecKillRequest(request);
         Long productId = request.getProductId();
-        map.put("productId", productId);
         Long psId = request.getPsId();
+        map.put("productId", productId);
+        argMap.put("productId", productId);
+        argMap.put("psId", psId);
         map.put("price", getPromoItem(psId, productId).getSeckillPrice());
         map.put("userId", request.getUserId());
         map.put("userName", request.getUserName());
         message.setBody(JSON.toJSONString(map).getBytes(StandardCharsets.UTF_8));
-        argMap.put("arg", request);
+
         TransactionSendResult sendResult = null;
         try {
             sendResult = transactionMQProducer.sendMessageInTransaction(message, argMap);
@@ -120,9 +123,16 @@ public class MQPromoTransactionProducer {
         return sendResult != null && LocalTransactionState.COMMIT_MESSAGE.equals(sendResult.getLocalTransactionState());
     }
 
+    /**
+     * 获取相关商品库存信息
+     *
+     * @param psId
+     * @param productId
+     * @return
+     */
     private PromoItem getPromoItem(Long psId, Long productId) {
         Example example = new Example(PromoItem.class);
         example.createCriteria().andEqualTo("psId", psId).andEqualTo("itemId", productId);
-        return promoItemMapper.selectOneByExample(example);
+        return promoItemMapper.selectByExample(example).get(0);
     }
 }

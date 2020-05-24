@@ -1,13 +1,21 @@
 package com.cskaoyan.gateway.controller.shopping;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.mall.commons.result.ResponseData;
 import com.mall.commons.result.ResponseUtil;
 import com.mall.shopping.ICartService;
 import com.mall.shopping.dto.*;
+import com.mall.user.intercepter.TokenIntercepter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.dubbo.config.annotation.Reference;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author ACoderWu
@@ -24,7 +32,15 @@ public class CartController {
 
     @GetMapping("/carts")
     @ApiOperation("获取购物车列表")
-    public ResponseData<Object> getCartListById(@RequestBody CartListByIdRequest request) {
+    public ResponseData<Object> getCartListById() {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        assert attributes != null;
+        HttpServletRequest servletRequest = attributes.getRequest();
+        String userInfo = (String) servletRequest.getAttribute(TokenIntercepter.USER_INFO_KEY);
+        JSONObject object = JSON.parseObject(userInfo);
+        Long uid = Long.parseLong(object.get("uid").toString());
+        CartListByIdRequest request = new CartListByIdRequest();
+        request.setUserId(uid);
         CartListByIdResponse response = iCartService.getCartListById(request);
         return new ResponseUtil<>().setData(response.getCartProductDtos());
     }
@@ -50,7 +66,7 @@ public class CartController {
         return new ResponseUtil<>().setData(response);
     }
 
-    @DeleteMapping("/cart/{uid}")
+    @DeleteMapping("/items/{uid}")
     @ApiOperation("删除购物车中选中的商品")
     public ResponseData deleteCartItem(@PathVariable Long uid) {
         DeleteCheckedItemRequest request = new DeleteCheckedItemRequest();
@@ -59,7 +75,7 @@ public class CartController {
         return new ResponseUtil<>().setData(response);
     }
 
-    @DeleteMapping("/cart/{uid}/{pid}")
+    @DeleteMapping("/carts/{uid}/{pid}")
     @ApiOperation("删除购物车中指定的商品")
     public ResponseData deleteCheckedItem(@PathVariable Long uid, @PathVariable Long pid) {
         DeleteCartItemRequest request = new DeleteCartItemRequest();

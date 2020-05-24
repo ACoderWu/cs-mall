@@ -11,4 +11,5 @@ import lombok.Data;
  */
 @Data
 public class ClearCartItemResponse extends AbstractResponse{
+    private static final long serialVersionUID = -4537113184043929836L;
 }

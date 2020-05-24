@@ -38,9 +38,13 @@ public class OrderController {
 
     @PostMapping("/order")
     @ApiOperation("创建订单")
-    public ResponseData createOrder(@RequestBody CreateOrderRequest createOrderRequest) {
+    public ResponseData createOrder(@RequestBody CreateOrderRequest createOrderRequest,HttpServletRequest servletRequest) {
+        String userInfo = (String) servletRequest.getAttribute(TokenIntercepter.USER_INFO_KEY);
+        JSONObject object = JSON.parseObject(userInfo);
+        Long uid = Long.parseLong(object.get("uid").toString());
+        createOrderRequest.setUserId(uid);
         CreateOrderResponse createOrderResponse = orderCoreService.createOrder(createOrderRequest);
-        if (!createOrderResponse.getCode().equals(OrderRetCode.SUCCESS.getCode()))
+        if (!OrderRetCode.SUCCESS.getCode().equals(createOrderResponse.getCode()))
             return new ResponseUtil<>().setErrorMsg(createOrderResponse.getMsg());
         return new ResponseUtil<>().setData(createOrderResponse.getOrderId());
     }

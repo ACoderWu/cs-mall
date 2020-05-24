@@ -20,14 +20,14 @@ public class ShoppingProviderApplicationTests {
     private ICartService cartService;
 
 
-    @Test
-    public void testCartService() throws IOException {
-        AddCartRequest request = new AddCartRequest();
-        request.setItemId(100023501L);
-        request.setUserId(123L);
-        cartService.addToCart(request);
-        System.in.read();
-    }
+    //@Test
+    //public void testCartService() throws IOException {
+    //    AddCartRequest request = new AddCartRequest();
+    //    request.setItemId(100023501L);
+    //    request.setUserId(123L);
+    //    cartService.addToCart(request);
+    //    System.in.read();
+    //}
 
     @Autowired
     private IContentService contentService;

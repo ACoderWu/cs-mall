@@ -5,6 +5,7 @@ import com.mall.commons.tool.exception.ValidateException;
 import com.mall.promo.constant.PromoRetCode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -12,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
  * @Create: 2020/5/16 17:30
  * @Version: 1.0
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 public class PromoInfoRequest extends AbstractRequest {

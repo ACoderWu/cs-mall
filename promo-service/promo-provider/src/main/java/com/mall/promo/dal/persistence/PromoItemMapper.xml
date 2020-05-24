@@ -17,7 +17,7 @@
         set item_stock = item_stock - #{num}
         where ps_id = #{psId}
           and item_id = #{itemId}
-          and stcok_num > 0
+          and item_stock > 0
     </update>
     <select id="selectPromoItemInfoDtoByPsId" resultType="com.mall.promo.dto.PromoItemInfoDto" parameterType="long">
         select p.item_id       as id,

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -16,7 +17,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PromoItemInfoDto {
+public class PromoItemInfoDto implements Serializable {
+    private static final long serialVersionUID = 4132170058797515498L;
     private Integer id;
     private Integer inventory;
     private BigDecimal price;

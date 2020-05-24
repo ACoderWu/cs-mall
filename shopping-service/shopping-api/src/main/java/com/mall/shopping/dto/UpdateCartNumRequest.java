@@ -12,13 +12,15 @@ import org.apache.commons.lang3.StringUtils;
 @Data
 public class UpdateCartNumRequest extends AbstractRequest{
     private Long userId;
-    private Long itemId;
-    private Integer num;
+    private Long productId;
+    private Long productNum;
+    //private Long itemId;
+    //private Integer num;
     private String checked;
 
     @Override
     public void requestCheck() {
-        if(userId==null||itemId==null||num==null|| StringUtils.isBlank(checked)){
+        if(userId==null||productId==null||productNum==null|| StringUtils.isBlank(checked)){
             throw new ValidateException(ShoppingRetCode.REQUISITE_PARAMETER_NOT_EXIST.getCode(),ShoppingRetCode.REQUISITE_PARAMETER_NOT_EXIST.getMessage());
         }
     }
