@@ -39,7 +39,7 @@ public class MQProducer {
         //延迟半小时发送
         //message.setDelayTimeLevel(16);
         //测试5s取消订单
-        message.setDelayTimeLevel(2);
+        message.setDelayTimeLevel(16);
         try {
             producer.send(message);
         } catch (MQClientException | RemotingException | MQBrokerException | InterruptedException e) {

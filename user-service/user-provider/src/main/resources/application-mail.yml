@@ -3,7 +3,7 @@ spring:
     host: smtp.163.com
     port: 25
     username: yjswc1076@163.com
-    password: QSNFGNQULINDPYIR
+    password:
 ##    加密方式，假如有需要写，没有就不写
 #    properties:
 #      mail:
