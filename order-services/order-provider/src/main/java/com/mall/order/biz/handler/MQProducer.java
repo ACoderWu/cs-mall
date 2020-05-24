@@ -26,17 +26,20 @@ public class MQProducer {
 
     @PostConstruct
     public void init() throws MQClientException {
-        producer = new DefaultMQProducer("producer_group");
-        producer.setNamesrvAddr("localhost:9876");
+        producer = new DefaultMQProducer("consumer_group");
+        producer.setNamesrvAddr("127.0.0.1:9876");
         producer.start();
     }
 
     public void sendOrderMessage(CancelOrderRequest request) {
         Map<String, Object> map = new HashMap<>();
-        map.put("cancelOrderRequest", request);
+        map.put("orderId", request.getOrderId());
+        map.put("userId",request.getUserId());
         Message message = new Message("order_topic", JSON.toJSONString(map).getBytes(StandardCharsets.UTF_8));
         //延迟半小时发送
-        message.setDelayTimeLevel(16);
+        //message.setDelayTimeLevel(16);
+        //测试5s取消订单
+        message.setDelayTimeLevel(2);
         try {
             producer.send(message);
         } catch (MQClientException | RemotingException | MQBrokerException | InterruptedException e) {
