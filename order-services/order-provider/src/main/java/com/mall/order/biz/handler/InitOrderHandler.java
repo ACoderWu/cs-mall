@@ -1,6 +1,7 @@
 package com.mall.order.biz.handler;
 
 import com.mall.commons.tool.exception.BizException;
+import com.mall.commons.tool.utils.TradeNoUtils;
 import com.mall.order.biz.context.CreateOrderContext;
 import com.mall.order.biz.context.TransHandlerContext;
 import com.mall.order.constant.OrderRetCode;
@@ -46,8 +47,9 @@ public class InitOrderHandler extends AbstractTransHandler {
 
         Order order = new Order();
         //插入order
-        //FIXME:后续使用发号器
-        String orderId = UUID.randomUUID().toString();
+        //String orderId = UUID.randomUUID().toString();
+        //发号器生成orderId
+        String orderId = TradeNoUtils.generateTradeNo();
         order.setOrderId(orderId);
         order.setUserId(createOrderContext.getUserId());
         order.setBuyerNick(createOrderContext.getUserName());
@@ -64,7 +66,9 @@ public class InitOrderHandler extends AbstractTransHandler {
             for (CartProductDto dto : dtoList) {
 
                 OrderItem orderItem = new OrderItem();
-                String orderItemId = UUID.randomUUID().toString();
+                //String orderItemId = UUID.randomUUID().toString();
+                //发号器生成统一id
+                String orderItemId = TradeNoUtils.generateTradeNo();
                 orderItem.setId(orderItemId);
                 Long productId = dto.getProductId();
                 //收集productId更新createOrderContext
