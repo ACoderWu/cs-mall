@@ -13,6 +13,7 @@ import com.mall.order.dto.CartProductDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,6 +57,7 @@ public class InitOrderHandler extends AbstractTransHandler {
         order.setStatus(OrderConstants.ORDER_STATUS_INIT);
         orderMapper.insert(order);
         List<Long> productIds = createOrderContext.getBuyProductIds();
+        if(CollectionUtils.isEmpty(productIds)) productIds = new ArrayList<>();
         //插入order关联表
         List<CartProductDto> dtoList = createOrderContext.getCartProductDtoList();
         if (dtoList != null) {

@@ -48,7 +48,6 @@ public class SubStockHandler extends AbstractTransHandler {
             productIds = dtoList.stream().map(CartProductDto::getProductId).collect(Collectors.toList());
         }
         productIds.sort(Long::compareTo);
-        System.out.println(productIds);
         //锁定库存
         List<Stock> stockList = stockMapper.findStocksForUpdate(productIds);
         if (CollectionUtils.isEmpty(stockList)) {
